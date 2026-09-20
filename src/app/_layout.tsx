@@ -37,6 +37,13 @@ export default function RootLayout() {
           title: 'Perfil',
         }}
       />
+
+      <Stack.Screen
+        name="new-task"
+        options={{
+          title: 'Nova tarefa',
+        }}
+      />
     </Stack>
   );
 }
