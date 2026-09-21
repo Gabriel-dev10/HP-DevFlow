@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { colors, spacing } from '../theme';
 import { Task } from '../types/task';
@@ -8,8 +9,18 @@ type TaskCardProps = {
 };
 
 export function TaskCard({ task }: TaskCardProps) {
+  const router = useRouter();
+
   return (
-    <View style={styles.card}>
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: '/task-details',
+          params: { taskId: task.id },
+        })
+      }
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+    >
       <View style={styles.content}>
         <Text style={styles.title}>{task.title}</Text>
 
@@ -25,7 +36,7 @@ export function TaskCard({ task }: TaskCardProps) {
       <Text style={styles.priority}>
         {task.priority}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -37,6 +48,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: spacing.md,
     marginBottom: spacing.md,
+  },
+
+  cardPressed: {
+    opacity: 0.75,
   },
 
   content: {
