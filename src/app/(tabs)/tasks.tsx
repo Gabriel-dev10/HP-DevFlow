@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.md,
   },
 
   title: {
@@ -147,12 +148,12 @@ const styles = StyleSheet.create({
   filters: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   filterButton: {
     paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     borderRadius: 20,
     backgroundColor: colors.surface,
     borderWidth: 1,

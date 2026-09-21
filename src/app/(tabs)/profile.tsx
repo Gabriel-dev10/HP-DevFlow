@@ -22,7 +22,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg, alignItems: 'center' },
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: spacing.screen, paddingTop: spacing.md, paddingBottom: spacing.screenBottom, alignItems: 'center' },
   title: { alignSelf: 'flex-start', color: colors.text, fontSize: 28, fontWeight: '700', marginBottom: spacing.xl },
   eyebrow: { alignSelf: 'flex-start', color: colors.textSecondary, fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: spacing.xs },
   avatar: { width: 88, height: 88, borderRadius: 44, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },

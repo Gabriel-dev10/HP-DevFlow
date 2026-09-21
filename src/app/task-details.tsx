@@ -67,14 +67,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.screenBottom,
   },
 
   title: {
     color: colors.text,
     fontSize: 26,
     fontWeight: '700',
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
 
   statusPill: {
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    marginTop: spacing.lg,
+    marginTop: spacing.md,
   },
 
   label: {
@@ -135,6 +137,6 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
   },
 });

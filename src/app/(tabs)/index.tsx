@@ -90,15 +90,16 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.background,
-    padding: spacing.lg,
-    paddingBottom: spacing.xl,
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.screenBottom,
   },
 
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
 
   eyebrow: {
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 30,
     fontWeight: '700',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   progressCard: {
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   taskCard: {
     backgroundColor: colors.surface,
     borderRadius: 16,
-    padding: spacing.lg,
+    padding: spacing.md,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -192,10 +193,10 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 13,
     fontWeight: '600',
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
   },
 
-  taskMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: spacing.md },
+  taskMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: spacing.sm },
   priority: { color: colors.primary, fontSize: 12, fontWeight: '700', textTransform: 'capitalize', marginLeft: spacing.sm },
 
   actionText: {

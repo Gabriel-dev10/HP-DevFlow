@@ -103,14 +103,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.screenBottom,
   },
 
   title: {
     color: colors.text,
     fontSize: 28,
     fontWeight: '700',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   eyebrow: { color: colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 0.8, marginBottom: spacing.xs },
@@ -131,18 +133,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     color: colors.text,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   textArea: {
-    minHeight: 120,
+    minHeight: 96,
     textAlignVertical: 'top',
   },
 
   priorityRow: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
 
   priorityButton: {
