@@ -11,6 +11,7 @@ import { TaskCard } from '../../components/TaskCard';
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
 import { useRouter } from 'expo-router';
+import { ListFilter, Plus } from 'lucide-react-native';
 
 type Filter = 'todas' | 'pendentes' | 'concluidas';
 
@@ -33,7 +34,13 @@ export default function TasksScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Minhas tarefas</Text>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.eyebrow}>SEU PLANEJAMENTO</Text>
+          <Text style={styles.title}>Tarefas</Text>
+        </View>
+        <ListFilter size={22} color={colors.textSecondary} />
+      </View>
 
       <Text style={styles.subtitle}>
         Organize suas atividades de estudo.
@@ -63,7 +70,8 @@ export default function TasksScreen() {
         style={styles.newTaskButton}
         onPress={() => router.push('/new-task')}
       >
-        <Text style={styles.newTaskButtonText}>+ Nova tarefa</Text>
+        <Plus size={18} color={colors.surface} />
+        <Text style={styles.newTaskButtonText}>Nova tarefa</Text>
       </Pressable>
 
       <FlatList
@@ -122,9 +130,12 @@ const styles = StyleSheet.create({
 
   title: {
     color: colors.text,
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '700',
   },
+
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.xs },
+  eyebrow: { color: colors.textSecondary, fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
 
   subtitle: {
     color: colors.textSecondary,
@@ -171,6 +182,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.sm,
     marginBottom: spacing.md,
   },
 

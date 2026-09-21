@@ -13,6 +13,7 @@ import { useTasks } from '../data/task-context';
 import { colors, spacing } from '../theme';
 import { TaskPriority } from '../types/task';
 import { useRouter } from 'expo-router';
+import { AlignLeft, CalendarDays, Flag } from 'lucide-react-native';
 
 export default function NewTaskScreen() {
   const [title, setTitle] = useState('');
@@ -39,13 +40,10 @@ export default function NewTaskScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Nova tarefa
-      </Text>
+      <Text style={styles.eyebrow}>CRIAR</Text>
+      <Text style={styles.title}>Nova tarefa</Text>
 
-      <Text style={styles.label}>
-        Título
-      </Text>
+      <View style={styles.labelRow}><AlignLeft size={16} color={colors.textSecondary} /><Text style={styles.label}>Título</Text></View>
 
       <TextInput
         value={title}
@@ -55,9 +53,7 @@ export default function NewTaskScreen() {
         style={styles.input}
       />
 
-      <Text style={styles.label}>
-        Descrição
-      </Text>
+      <View style={styles.labelRow}><AlignLeft size={16} color={colors.textSecondary} /><Text style={styles.label}>Descrição</Text></View>
 
       <TextInput
         value={description}
@@ -68,7 +64,7 @@ export default function NewTaskScreen() {
         style={[styles.input, styles.textArea]}
       />
 
-      <Text style={styles.label}>Data</Text>
+      <View style={styles.labelRow}><CalendarDays size={16} color={colors.textSecondary} /><Text style={styles.label}>Data</Text></View>
 
       <TextInput
         value={date}
@@ -78,7 +74,7 @@ export default function NewTaskScreen() {
         style={styles.input}
       />
 
-      <Text style={styles.label}>Prioridade</Text>
+      <View style={styles.labelRow}><Flag size={16} color={colors.textSecondary} /><Text style={styles.label}>Prioridade</Text></View>
 
       <View style={styles.priorityRow}>
         {(['baixa', 'media', 'alta'] as TaskPriority[]).map((option) => (
@@ -97,6 +93,7 @@ export default function NewTaskScreen() {
       <Button
         title="Adicionar tarefa"
         onPress={handleCreateTask}
+        icon="plus"
       />
     </View>
   );
@@ -116,12 +113,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
 
+  eyebrow: { color: colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 0.8, marginBottom: spacing.xs },
+
   label: {
     color: colors.text,
     fontSize: 15,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },
+
+  labelRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
 
   input: {
     backgroundColor: colors.surface,
