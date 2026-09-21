@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
+import { BarChart3, CheckCircle2, ListChecks, Target } from 'lucide-react-native';
 
 export default function StatisticsScreen() {
   const { tasks } = useTasks();
@@ -11,18 +12,19 @@ export default function StatisticsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Estatísticas</Text>
+      <View style={styles.header}><View><Text style={styles.eyebrow}>VISÃO GERAL</Text><Text style={styles.title}>Estatísticas</Text></View><BarChart3 size={24} color={colors.primary} /></View>
       <Text style={styles.subtitle}>Acompanhe seu desempenho nos estudos.</Text>
 
       <View style={styles.hero}>
+        <Target size={24} color={colors.surface} />
         <Text style={styles.heroValue}>{progress}%</Text>
         <Text style={styles.heroLabel}>do planejamento concluído</Text>
       </View>
 
       <View style={styles.row}>
-        <View style={styles.card}><Text style={styles.value}>{tasks.length}</Text><Text style={styles.label}>Total</Text></View>
-        <View style={styles.card}><Text style={styles.value}>{completed}</Text><Text style={styles.label}>Concluídas</Text></View>
-        <View style={styles.card}><Text style={styles.value}>{pending}</Text><Text style={styles.label}>Pendentes</Text></View>
+        <View style={styles.card}><ListChecks size={18} color={colors.primary} /><Text style={styles.value}>{tasks.length}</Text><Text style={styles.label}>Total</Text></View>
+        <View style={styles.card}><CheckCircle2 size={18} color={colors.success} /><Text style={styles.value}>{completed}</Text><Text style={styles.label}>Concluídas</Text></View>
+        <View style={styles.card}><Target size={18} color={colors.warning} /><Text style={styles.value}>{pending}</Text><Text style={styles.label}>Pendentes</Text></View>
       </View>
     </View>
   );
@@ -30,7 +32,9 @@ export default function StatisticsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
-  title: { color: colors.text, fontSize: 28, fontWeight: '700' },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.xs },
+  eyebrow: { color: colors.textSecondary, fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
+  title: { color: colors.text, fontSize: 30, fontWeight: '700' },
   subtitle: { color: colors.textSecondary, marginTop: spacing.xs, marginBottom: spacing.lg },
   hero: { backgroundColor: colors.primary, borderRadius: 16, padding: spacing.lg, marginBottom: spacing.md },
   heroValue: { color: colors.surface, fontSize: 40, fontWeight: '700' },

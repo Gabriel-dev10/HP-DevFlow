@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { CalendarDays, CheckCircle2, Circle, Flag } from 'lucide-react-native';
 
 import { Button } from '../components/Button';
 import { useTasks } from '../data/task-context';
@@ -22,6 +23,10 @@ export default function TaskDetailsScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.statusPill}>
+        {task.completed ? <CheckCircle2 size={15} color={colors.success} /> : <Circle size={15} color={colors.primary} />}
+        <Text style={styles.statusPillText}>{task.completed ? 'Concluída' : 'Em andamento'}</Text>
+      </View>
       <Text style={styles.title}>
         {task.title}
       </Text>
@@ -32,21 +37,21 @@ export default function TaskDetailsScreen() {
         {task.description}
       </Text>
 
-      <Text style={styles.label}>Data</Text>
+      <View style={styles.infoRow}>
+        <CalendarDays size={17} color={colors.textSecondary} />
+        <View>
+          <Text style={styles.label}>Data</Text>
+          <Text style={styles.value}>{task.date}</Text>
+        </View>
+      </View>
 
-      <Text style={styles.value}>
-        {task.date}
-      </Text>
-
-      <Text style={styles.label}>Prioridade</Text>
-
-      <Text style={styles.priority}>
-        {task.priority}
-      </Text>
-
-      <Text style={styles.status}>
-        {task.completed ? 'Concluída' : 'Pendente'}
-      </Text>
+      <View style={styles.infoRow}>
+        <Flag size={17} color={colors.warning} />
+        <View>
+          <Text style={styles.label}>Prioridade</Text>
+          <Text style={styles.priority}>{task.priority}</Text>
+        </View>
+      </View>
 
       <View style={styles.button}>
         <Button
@@ -72,11 +77,36 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
 
+  statusPill: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: '#FFF0ED',
+    borderRadius: 20,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+    marginBottom: spacing.md,
+  },
+
+  statusPillText: {
+    color: colors.primaryDark,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: spacing.lg,
+  },
+
   label: {
     color: colors.textSecondary,
     fontSize: 14,
     fontWeight: '600',
-    marginTop: spacing.lg,
+    marginTop: 0,
     marginBottom: spacing.xs,
   },
 
@@ -101,7 +131,7 @@ const styles = StyleSheet.create({
     color: colors.success,
     fontSize: 16,
     fontWeight: '700',
-    marginTop: spacing.lg,
+    marginTop: 0,
   },
 
   button: {
