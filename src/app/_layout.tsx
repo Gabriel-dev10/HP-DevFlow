@@ -4,37 +4,16 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="(tabs)"
         options={{
-          title: 'Início',
+          headerShown: false,
         }}
       />
 
       <Stack.Screen
-        name="tasks"
+        name="task-details"
         options={{
-          title: 'Tarefas',
-        }}
-      />
-
-      <Stack.Screen
-        name="calendar"
-        options={{
-          title: 'Agenda',
-        }}
-      />
-
-      <Stack.Screen
-        name="statistics"
-        options={{
-          title: 'Estatísticas',
-        }}
-      />
-
-      <Stack.Screen
-        name="profile"
-        options={{
-          title: 'Perfil',
+          title: 'Detalhes da tarefa',
         }}
       />
 
