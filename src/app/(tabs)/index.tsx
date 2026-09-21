@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { ArrowRight, CalendarDays, CheckCircle2, Plus } from 'lucide-react-native';
 
 import { colors, spacing } from '../../theme';
 import { useTasks } from '../../data/task-context';
@@ -22,21 +23,40 @@ export default function HomeScreen() {
     });
   }
 
+  function handleCreateTask() {
+    router.push('/new-task');
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>Olá, estudante! 👋</Text>
-
-      <Text style={styles.title}>Seu progresso hoje</Text>
-
-      <View style={styles.progressCard}>
-        <Text style={styles.progressValue}>{progress}%</Text>
-
-        <Text style={styles.progressLabel}>
-          das tarefas concluídas
-        </Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.eyebrow}>SEGUNDA, 21 DE SETEMBRO</Text>
+          <Text style={styles.greeting}>Olá, estudante</Text>
+        </View>
+        <View style={styles.avatar}><Text style={styles.avatarText}>JS</Text></View>
       </View>
 
-      <Text style={styles.sectionTitle}>Próxima tarefa</Text>
+      <Text style={styles.title}>Hoje</Text>
+
+      <View style={styles.progressCard}>
+        <View style={styles.progressIcon}><CheckCircle2 size={22} color={colors.primary} /></View>
+        <View style={styles.progressCopy}>
+          <Text style={styles.progressLabel}>Seu progresso</Text>
+          <Text style={styles.progressValue}>{progress}% concluído</Text>
+        </View>
+        <Text style={styles.progressCount}>{completedTasks}/{tasks.length}</Text>
+      </View>
+
+      <Pressable style={styles.addTaskButton} onPress={handleCreateTask}>
+        <View style={styles.addIcon}><Plus size={18} color={colors.primary} /></View>
+        <Text style={styles.addTaskText}>Adicionar tarefa</Text>
+      </Pressable>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Próxima tarefa</Text>
+        <Text style={styles.sectionHint}>Em foco</Text>
+      </View>
 
       {nextTask ? <Pressable
         style={({ pressed }) => [
@@ -45,58 +65,91 @@ export default function HomeScreen() {
         ]}
         onPress={handleOpenTask}
       >
-        <Text style={styles.taskTitle}>{nextTask.title}</Text>
+        <View style={styles.taskTitleRow}>
+          <View style={styles.taskDot} />
+          <Text style={styles.taskTitle}>{nextTask.title}</Text>
+          <ArrowRight size={18} color={colors.textSecondary} />
+        </View>
 
         <Text style={styles.taskDescription}>{nextTask.description}</Text>
 
-        <Text style={styles.taskDate}>{nextTask.date} • Prioridade {nextTask.priority}</Text>
+        <View style={styles.taskMeta}>
+          <CalendarDays size={14} color={colors.textSecondary} />
+          <Text style={styles.taskDate}>{nextTask.date}</Text>
+          <Text style={styles.priority}>{nextTask.priority}</Text>
+        </View>
 
         <Text style={styles.actionText}>
           Toque para ver detalhes
         </Text>
       </Pressable> : <Text style={styles.emptyText}>Você concluiu todas as tarefas.</Text>}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.background,
     padding: spacing.lg,
+    paddingBottom: spacing.xl,
+  },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xl,
+  },
+
+  eyebrow: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
   },
 
   greeting: {
     color: colors.textSecondary,
-    fontSize: 16,
-    marginBottom: spacing.sm,
+    marginTop: spacing.xs,
+    fontSize: 17,
+    fontWeight: '600',
   },
+
+  avatar: { width: 38, height: 38, borderRadius: 19, backgroundColor: '#F7C6BE', alignItems: 'center', justifyContent: 'center' },
+  avatarText: { color: colors.primaryDark, fontSize: 12, fontWeight: '800' },
 
   title: {
     color: colors.text,
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '700',
     marginBottom: spacing.lg,
   },
 
   progressCard: {
-    backgroundColor: colors.primary,
-    borderRadius: 16,
-    padding: spacing.lg,
-    marginBottom: spacing.xl,
+    backgroundColor: '#FFF0ED',
+    borderRadius: 14,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
-  progressValue: {
-    color: colors.surface,
-    fontSize: 36,
-    fontWeight: '700',
-  },
+  progressIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
+  progressCopy: { flex: 1, marginLeft: spacing.sm },
+  progressValue: { color: colors.text, fontSize: 15, fontWeight: '700', marginTop: 2 },
 
   progressLabel: {
-    color: colors.surface,
-    fontSize: 15,
-    marginTop: spacing.xs,
+    color: colors.primaryDark,
+    fontSize: 12,
+    fontWeight: '600',
   },
+  progressCount: { color: colors.primaryDark, fontSize: 14, fontWeight: '700' },
+
+  addTaskButton: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.sm, marginBottom: spacing.xl },
+  addIcon: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#FFF0ED', alignItems: 'center', justifyContent: 'center', marginRight: spacing.sm },
+  addTaskText: { color: colors.primary, fontSize: 14, fontWeight: '700' },
+
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
 
   sectionTitle: {
     color: colors.text,
@@ -104,6 +157,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: spacing.md,
   },
+
+  sectionHint: { color: colors.textSecondary, fontSize: 12 },
 
   taskCard: {
     backgroundColor: colors.surface,
@@ -114,14 +169,18 @@ const styles = StyleSheet.create({
   },
 
   taskCardPressed: {
-    opacity: 0.7,
+    opacity: 0.78,
   },
 
   taskTitle: {
     color: colors.text,
     fontSize: 17,
     fontWeight: '600',
+    flex: 1,
   },
+
+  taskTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  taskDot: { width: 10, height: 10, borderRadius: 5, borderWidth: 2, borderColor: colors.primary },
 
   taskDescription: {
     color: colors.textSecondary,
@@ -130,11 +189,14 @@ const styles = StyleSheet.create({
   },
 
   taskDate: {
-    color: colors.primary,
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: '600',
     marginTop: spacing.md,
   },
+
+  taskMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: spacing.md },
+  priority: { color: colors.primary, fontSize: 12, fontWeight: '700', textTransform: 'capitalize', marginLeft: spacing.sm },
 
   actionText: {
     color: colors.primary,
