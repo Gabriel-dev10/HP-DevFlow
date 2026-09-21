@@ -1,8 +1,8 @@
-# StudyFlow
+# HP DevFlow
 
-Aplicativo mobile para organização e acompanhamento da rotina de estudos.
+Aplicativo mobile para acompanhamento de atividades e demandas de desenvolvimento.
 
-O StudyFlow permite organizar tarefas, acompanhar o progresso e visualizar as atividades de estudo de forma simples e objetiva.
+O HP DevFlow organiza issues, projetos, responsáveis, prazos e status de entrega em um fluxo inspirado no trabalho de equipes que usam GitLab.
 
 ## Tecnologias
 
@@ -13,11 +13,11 @@ O StudyFlow permite organizar tarefas, acompanhar o progresso e visualizar as at
 
 ## Funcionalidades
 
-- Visualização do progresso de estudos
-- Gerenciamento de tarefas
-- Filtros de tarefas
-- Detalhes das atividades
-- Criação de novas tarefas
-- Agenda de estudos
-- Estatísticas de desempenho
-- Perfil do usuário
+- Dashboard de issues atribuídas
+- Projetos e progresso por projeto
+- Filtros por status de desenvolvimento
+- Detalhes de issues com referência GitLab simulada
+- Criação de novas demandas
+- Fluxo Backlog, Em desenvolvimento, Em revisão e Concluído
+- Atividades recentes e progresso de entregas
+- Perfil profissional do desenvolvedor
