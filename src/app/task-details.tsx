@@ -1,38 +1,57 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { Button } from '../components/Button';
+import { useTasks } from '../data/task-context';
 import { colors, spacing } from '../theme';
 
 export default function TaskDetailsScreen() {
+  const { taskId } = useLocalSearchParams<{ taskId: string }>();
+  const router = useRouter();
+  const { getTask, toggleTask } = useTasks();
+  const task = getTask(taskId);
+
+  if (!task) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Tarefa não encontrada</Text>
+        <Button title="Voltar" onPress={() => router.back()} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Estudar Engenharia de Software
+        {task.title}
       </Text>
 
       <Text style={styles.label}>Descrição</Text>
 
       <Text style={styles.description}>
-        Revisar os conteúdos da disciplina e preparar o
-        material para a próxima aula.
+        {task.description}
       </Text>
 
       <Text style={styles.label}>Data</Text>
 
       <Text style={styles.value}>
-        20/09/2026
+        {task.date}
       </Text>
 
       <Text style={styles.label}>Prioridade</Text>
 
       <Text style={styles.priority}>
-        Alta
+        {task.priority}
+      </Text>
+
+      <Text style={styles.status}>
+        {task.completed ? 'Concluída' : 'Pendente'}
       </Text>
 
       <View style={styles.button}>
         <Button
-          title="Marcar como concluída"
-          onPress={() => {}}
+          title={task.completed ? 'Marcar como pendente' : 'Marcar como concluída'}
+          onPress={() => toggleTask(task.id)}
         />
       </View>
     </View>
@@ -76,6 +95,13 @@ const styles = StyleSheet.create({
     color: colors.warning,
     fontSize: 16,
     fontWeight: '700',
+  },
+
+  status: {
+    color: colors.success,
+    fontSize: 16,
+    fontWeight: '700',
+    marginTop: spacing.lg,
   },
 
   button: {

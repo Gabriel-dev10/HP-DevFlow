@@ -8,13 +8,16 @@ import {
 } from 'react-native';
 
 import { TaskCard } from '../../components/TaskCard';
-import { tasks } from '../../data/tasks';
+import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
+import { useRouter } from 'expo-router';
 
 type Filter = 'todas' | 'pendentes' | 'concluidas';
 
 export default function TasksScreen() {
   const [filter, setFilter] = useState<Filter>('todas');
+  const { tasks } = useTasks();
+  const router = useRouter();
 
   const filteredTasks = tasks.filter((task) => {
     if (filter === 'pendentes') {
@@ -56,12 +59,24 @@ export default function TasksScreen() {
         />
       </View>
 
+      <Pressable
+        style={styles.newTaskButton}
+        onPress={() => router.push('/new-task')}
+      >
+        <Text style={styles.newTaskButtonText}>+ Nova tarefa</Text>
+      </Pressable>
+
       <FlatList
         data={filteredTasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <TaskCard task={item} />}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>
+            Nenhuma tarefa nesta categoria.
+          </Text>
+        }
       />
     </View>
   );
@@ -149,5 +164,25 @@ const styles = StyleSheet.create({
 
   list: {
     paddingBottom: spacing.xl,
+  },
+
+  newTaskButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    padding: spacing.md,
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+
+  newTaskButtonText: {
+    color: colors.surface,
+    fontSize: 15,
+    fontWeight: '700',
+  },
+
+  emptyText: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.lg,
   },
 });

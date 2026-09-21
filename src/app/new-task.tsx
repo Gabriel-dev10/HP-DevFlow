@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import {
+  Alert,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -7,17 +9,32 @@ import {
 } from 'react-native';
 
 import { Button } from '../components/Button';
+import { useTasks } from '../data/task-context';
 import { colors, spacing } from '../theme';
+import { TaskPriority } from '../types/task';
+import { useRouter } from 'expo-router';
 
 export default function NewTaskScreen() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [date, setDate] = useState('21/09/2026');
+  const [priority, setPriority] = useState<TaskPriority>('media');
+  const { addTask } = useTasks();
+  const router = useRouter();
 
   function handleCreateTask() {
-    console.log({
-      title,
-      description,
+    if (!title.trim() || !description.trim() || !date.trim()) {
+      Alert.alert('Campos obrigatórios', 'Preencha título, descrição e data.');
+      return;
+    }
+
+    addTask({
+      title: title.trim(),
+      description: description.trim(),
+      date: date.trim(),
+      priority,
     });
+    router.replace('/(tabs)/tasks');
   }
 
   return (
@@ -50,6 +67,32 @@ export default function NewTaskScreen() {
         multiline
         style={[styles.input, styles.textArea]}
       />
+
+      <Text style={styles.label}>Data</Text>
+
+      <TextInput
+        value={date}
+        onChangeText={setDate}
+        placeholder="Ex.: 25/09/2026"
+        placeholderTextColor={colors.textSecondary}
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Prioridade</Text>
+
+      <View style={styles.priorityRow}>
+        {(['baixa', 'media', 'alta'] as TaskPriority[]).map((option) => (
+          <Pressable
+            key={option}
+            onPress={() => setPriority(option)}
+            style={[styles.priorityButton, priority === option && styles.priorityButtonActive]}
+          >
+            <Text style={[styles.priorityText, priority === option && styles.priorityTextActive]}>
+              {option}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
       <Button
         title="Adicionar tarefa"
@@ -93,5 +136,36 @@ const styles = StyleSheet.create({
   textArea: {
     minHeight: 120,
     textAlignVertical: 'top',
+  },
+
+  priorityRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.xl,
+  },
+
+  priorityButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+
+  priorityButtonActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+
+  priorityText: {
+    color: colors.textSecondary,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+
+  priorityTextActive: {
+    color: colors.surface,
   },
 });

@@ -1,8 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { colors, spacing } from '../../theme';
+import { useTasks } from '../../data/task-context';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const { tasks } = useTasks();
+  const nextTask = tasks.find((task) => !task.completed) ?? tasks[0];
+  const completedTasks = tasks.filter((task) => task.completed).length;
+  const progress = tasks.length
+    ? Math.round((completedTasks / tasks.length) * 100)
+    : 0;
+
+  function handleOpenTask() {
+    router.push({
+      pathname: '/task-details',
+      params: {
+        taskId: nextTask?.id ?? '1',
+      },
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>Olá, estudante! 👋</Text>
@@ -10,7 +29,7 @@ export default function HomeScreen() {
       <Text style={styles.title}>Seu progresso hoje</Text>
 
       <View style={styles.progressCard}>
-        <Text style={styles.progressValue}>75%</Text>
+        <Text style={styles.progressValue}>{progress}%</Text>
 
         <Text style={styles.progressLabel}>
           das tarefas concluídas
@@ -19,17 +38,23 @@ export default function HomeScreen() {
 
       <Text style={styles.sectionTitle}>Próxima tarefa</Text>
 
-      <View style={styles.taskCard}>
-        <Text style={styles.taskTitle}>
-          Estudar Engenharia de Software
-        </Text>
+      {nextTask ? <Pressable
+        style={({ pressed }) => [
+          styles.taskCard,
+          pressed && styles.taskCardPressed,
+        ]}
+        onPress={handleOpenTask}
+      >
+        <Text style={styles.taskTitle}>{nextTask.title}</Text>
 
-        <Text style={styles.taskDescription}>
-          Revisar os conteúdos da disciplina.
-        </Text>
+        <Text style={styles.taskDescription}>{nextTask.description}</Text>
 
-        <Text style={styles.taskDate}>Hoje • Prioridade alta</Text>
-      </View>
+        <Text style={styles.taskDate}>{nextTask.date} • Prioridade {nextTask.priority}</Text>
+
+        <Text style={styles.actionText}>
+          Toque para ver detalhes
+        </Text>
+      </Pressable> : <Text style={styles.emptyText}>Você concluiu todas as tarefas.</Text>}
     </View>
   );
 }
@@ -88,6 +113,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
 
+  taskCardPressed: {
+    opacity: 0.7,
+  },
+
   taskTitle: {
     color: colors.text,
     fontSize: 17,
@@ -105,5 +134,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     marginTop: spacing.md,
+  },
+
+  actionText: {
+    color: colors.primary,
+    fontSize: 13,
+    fontWeight: '600',
+    marginTop: spacing.md,
+  },
+
+  emptyText: {
+    color: colors.textSecondary,
+    fontSize: 16,
   },
 });
