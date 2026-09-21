@@ -29,7 +29,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Início',
+          title: 'Dashboard',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
@@ -37,7 +37,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="tasks"
         options={{
-          title: 'Tarefas',
+          title: 'Issues',
           tabBarIcon: ({ color, size }) => <ListTodo color={color} size={size} />,
         }}
       />
@@ -45,7 +45,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Agenda',
+          title: 'Projetos',
           tabBarIcon: ({ color, size }) => <CalendarDays color={color} size={size} />,
         }}
       />
@@ -53,7 +53,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="statistics"
         options={{
-          title: 'Estatísticas',
+          title: 'Atividades',
           tabBarIcon: ({ color, size }) => <BarChart3 color={color} size={size} />,
         }}
       />

@@ -16,14 +16,14 @@ export default function RootLayout() {
         <Stack.Screen
           name="task-details"
           options={{
-            title: 'Detalhes da tarefa',
+            title: 'Detalhes da issue',
           }}
         />
 
         <Stack.Screen
           name="new-task"
           options={{
-            title: 'Nova tarefa',
+            title: 'Nova demanda',
           }}
         />
       </Stack>

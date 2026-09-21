@@ -1,50 +1,57 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FolderKanban, GitBranch } from 'lucide-react-native';
 
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
-import { CalendarDays, CheckCircle2, Circle } from 'lucide-react-native';
 
-export default function CalendarScreen() {
+export default function ProjectsScreen() {
   const { tasks } = useTasks();
+  const projects = Array.from(new Map(tasks.map((task) => [task.project, task])).values());
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View><Text style={styles.eyebrow}>PLANEJAMENTO</Text><Text style={styles.title}>Agenda</Text></View>
-        <CalendarDays size={24} color={colors.primary} />
-      </View>
-      <Text style={styles.subtitle}>Suas atividades organizadas por data.</Text>
+      <Text style={styles.eyebrow}>ORGANIZAÇÃO</Text>
+      <Text style={styles.title}>Projetos</Text>
+      <Text style={styles.subtitle}>Visão geral dos projetos do seu time.</Text>
       <FlatList
-        data={[...tasks].sort((first, second) => first.date.localeCompare(second.date))}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <View style={styles.dateBlock}><Text style={styles.date}>{item.date.split('/')[0]}</Text><Text style={styles.month}>SET</Text></View>
-            <View style={styles.itemContent}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Text style={styles.status}>{item.completed ? 'Concluída' : 'Pendente'}</Text>
+        data={projects}
+        keyExtractor={(item) => item.project}
+        renderItem={({ item }) => {
+          const projectTasks = tasks.filter((task) => task.project === item.project);
+          const done = projectTasks.filter((task) => task.completed).length;
+          return (
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={styles.icon}><FolderKanban size={19} color={colors.primary} /></View>
+                <View style={styles.copy}><Text style={styles.key}>{item.projectKey}</Text><Text style={styles.project}>{item.project}</Text></View>
+                <Text style={styles.count}>{projectTasks.length} issues</Text>
+              </View>
+              <View style={styles.progressTrack}><View style={[styles.progress, { width: `${projectTasks.length ? (done / projectTasks.length) * 100 : 0}%` }]} /></View>
+              <View style={styles.footer}><Text style={styles.meta}><GitBranch size={13} color={colors.textSecondary} /> {projectTasks.filter((task) => !task.completed).length} abertas</Text><Text style={styles.meta}>{done}/{projectTasks.length} concluídas</Text></View>
             </View>
-            {item.completed ? <CheckCircle2 size={18} color={colors.success} /> : <Circle size={18} color={colors.border} />}
-          </View>
-        )}
-        ListEmptyComponent={<Text style={styles.empty}>Nenhuma atividade agendada.</Text>}
+          );
+        }}
+        ListEmptyComponent={<Text style={styles.empty}>Nenhum projeto associado.</Text>}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: spacing.screen, paddingTop: spacing.md, paddingBottom: spacing.screenBottom },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.xs },
-  eyebrow: { color: colors.textSecondary, fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
-  title: { color: colors.text, fontSize: 30, fontWeight: '700' },
-  subtitle: { color: colors.textSecondary, marginTop: spacing.xs, marginBottom: spacing.lg },
-  item: { flexDirection: 'row', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.md, marginBottom: spacing.sm },
-  dateBlock: { width: 48, alignItems: 'center', borderRightWidth: 1, borderRightColor: colors.border, marginRight: spacing.sm },
-  date: { color: colors.primary, fontSize: 22, fontWeight: '800' },
-  month: { color: colors.textSecondary, fontSize: 10, fontWeight: '700' },
-  itemContent: { flex: 1 },
-  taskTitle: { color: colors.text, fontWeight: '600' },
-  status: { color: colors.textSecondary, marginTop: spacing.xs, textTransform: 'capitalize' },
-  empty: { color: colors.textSecondary, textAlign: 'center', marginTop: spacing.lg },
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: spacing.screen, paddingTop: spacing.md },
+  eyebrow: { color: colors.primary, fontSize: 10, fontWeight: '800', letterSpacing: 0.8 },
+  title: { color: colors.text, fontSize: 30, fontWeight: '800', marginTop: spacing.xs },
+  subtitle: { color: colors.textSecondary, fontSize: 14, marginTop: spacing.xs, marginBottom: spacing.lg },
+  card: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 13, padding: spacing.md, marginBottom: spacing.sm },
+  cardHeader: { flexDirection: 'row', alignItems: 'center' },
+  icon: { width: 36, height: 36, borderRadius: 10, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  copy: { flex: 1, marginLeft: spacing.sm },
+  key: { color: colors.primary, fontSize: 11, fontWeight: '800' },
+  project: { color: colors.text, fontSize: 15, fontWeight: '800', marginTop: 2 },
+  count: { color: colors.textSecondary, fontSize: 11 },
+  progressTrack: { height: 7, backgroundColor: colors.border, borderRadius: 4, overflow: 'hidden', marginTop: spacing.md },
+  progress: { height: '100%', backgroundColor: colors.primary, borderRadius: 4 },
+  footer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: spacing.sm },
+  meta: { color: colors.textSecondary, fontSize: 11 },
+  empty: { color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xl },
 });

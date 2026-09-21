@@ -18,7 +18,9 @@ import { AlignLeft, CalendarDays, Flag } from 'lucide-react-native';
 export default function NewTaskScreen() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('21/09/2026');
+  const [date, setDate] = useState('22/09/2026');
+  const [project, setProject] = useState('Sistema Interno HP');
+  const [assignee, setAssignee] = useState('Gabriel Silva');
   const [priority, setPriority] = useState<TaskPriority>('media');
   const { addTask } = useTasks();
   const router = useRouter();
@@ -32,8 +34,11 @@ export default function NewTaskScreen() {
     addTask({
       title: title.trim(),
       description: description.trim(),
-      date: date.trim(),
+      dueDate: date.trim(),
       priority,
+      project: project.trim(),
+      projectKey: project.trim().split(' ').map((word) => word[0]).join('').toUpperCase(),
+      assignee: assignee.trim(),
     });
     router.replace('/(tabs)/tasks');
   }
@@ -41,14 +46,14 @@ export default function NewTaskScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.eyebrow}>CRIAR</Text>
-      <Text style={styles.title}>Nova tarefa</Text>
+      <Text style={styles.title}>Nova demanda</Text>
 
       <View style={styles.labelRow}><AlignLeft size={16} color={colors.textSecondary} /><Text style={styles.label}>Título</Text></View>
 
       <TextInput
         value={title}
         onChangeText={setTitle}
-        placeholder="Ex.: Estudar para a prova"
+        placeholder="Ex.: Corrigir validação do formulário"
         placeholderTextColor={colors.textSecondary}
         style={styles.input}
       />
@@ -58,7 +63,7 @@ export default function NewTaskScreen() {
       <TextInput
         value={description}
         onChangeText={setDescription}
-        placeholder="Descreva sua tarefa"
+        placeholder="Descreva a demanda técnica"
         placeholderTextColor={colors.textSecondary}
         multiline
         style={[styles.input, styles.textArea]}
@@ -70,6 +75,24 @@ export default function NewTaskScreen() {
         value={date}
         onChangeText={setDate}
         placeholder="Ex.: 25/09/2026"
+        placeholderTextColor={colors.textSecondary}
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Projeto</Text>
+      <TextInput
+        value={project}
+        onChangeText={setProject}
+        placeholder="Ex.: Sistema Interno HP"
+        placeholderTextColor={colors.textSecondary}
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Responsável</Text>
+      <TextInput
+        value={assignee}
+        onChangeText={setAssignee}
+        placeholder="Ex.: Gabriel Silva"
         placeholderTextColor={colors.textSecondary}
         style={styles.input}
       />
@@ -91,7 +114,7 @@ export default function NewTaskScreen() {
       </View>
 
       <Button
-        title="Adicionar tarefa"
+        title="Criar demanda"
         onPress={handleCreateTask}
         icon="plus"
       />

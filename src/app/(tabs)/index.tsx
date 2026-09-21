@@ -1,213 +1,132 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowRight, CalendarDays, CheckCircle2, Plus } from 'lucide-react-native';
+import {
+  ArrowRight,
+  CheckCircle2,
+  CircleDot,
+  Clock3,
+  GitBranch,
+  Plus,
+} from 'lucide-react-native';
 
-import { colors, spacing } from '../../theme';
 import { useTasks } from '../../data/task-context';
+import { colors, spacing } from '../../theme';
+
+const statusLabels = {
+  backlog: 'Backlog',
+  desenvolvimento: 'Em desenvolvimento',
+  revisao: 'Em revisão',
+  concluido: 'Concluído',
+};
 
 export default function HomeScreen() {
   const router = useRouter();
   const { tasks } = useTasks();
-  const nextTask = tasks.find((task) => !task.completed) ?? tasks[0];
-  const completedTasks = tasks.filter((task) => task.completed).length;
-  const progress = tasks.length
-    ? Math.round((completedTasks / tasks.length) * 100)
-    : 0;
-
-  function handleOpenTask() {
-    router.push({
-      pathname: '/task-details',
-      params: {
-        taskId: nextTask?.id ?? '1',
-      },
-    });
-  }
-
-  function handleCreateTask() {
-    router.push('/new-task');
-  }
+  const completed = tasks.filter((task) => task.completed).length;
+  const inProgress = tasks.filter((task) => task.status === 'desenvolvimento').length;
+  const dueSoon = tasks.filter((task) => !task.completed).slice(0, 2);
+  const progress = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.eyebrow}>SEGUNDA, 21 DE SETEMBRO</Text>
-          <Text style={styles.greeting}>Olá, estudante</Text>
+          <Text style={styles.eyebrow}>HP DEVFLOW</Text>
+          <Text style={styles.greeting}>Bom dia, Gabriel</Text>
         </View>
-        <View style={styles.avatar}><Text style={styles.avatarText}>JS</Text></View>
+        <View style={styles.avatar}>
+          <Image source={require('../../../assets/images/images.png')} style={styles.brandMark} />
+        </View>
       </View>
 
-      <Text style={styles.title}>Hoje</Text>
-
-      <View style={styles.progressCard}>
-        <View style={styles.progressIcon}><CheckCircle2 size={22} color={colors.primary} /></View>
-        <View style={styles.progressCopy}>
-          <Text style={styles.progressLabel}>Seu progresso</Text>
-          <Text style={styles.progressValue}>{progress}% concluído</Text>
+      <View style={styles.titleRow}>
+        <View>
+          <Text style={styles.title}>Dashboard</Text>
+          <Text style={styles.subtitle}>Acompanhe suas entregas de hoje.</Text>
         </View>
-        <Text style={styles.progressCount}>{completedTasks}/{tasks.length}</Text>
+        <Pressable style={styles.addButton} onPress={() => router.push('/new-task')}>
+          <Plus size={19} color={colors.surface} />
+        </Pressable>
       </View>
 
-      <Pressable style={styles.addTaskButton} onPress={handleCreateTask}>
-        <View style={styles.addIcon}><Plus size={18} color={colors.primary} /></View>
-        <Text style={styles.addTaskText}>Adicionar tarefa</Text>
-      </Pressable>
+      <View style={styles.metricsRow}>
+        <Metric value={String(tasks.length)} label="Issues atribuídas" icon={<GitBranch size={18} color={colors.primary} />} />
+        <Metric value={String(inProgress)} label="Em desenvolvimento" icon={<Clock3 size={18} color={colors.warning} />} />
+        <Metric value={`${progress}%`} label="Entregas concluídas" icon={<CheckCircle2 size={18} color={colors.success} />} />
+      </View>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Próxima tarefa</Text>
-        <Text style={styles.sectionHint}>Em foco</Text>
+        <Text style={styles.sectionTitle}>Próximas entregas</Text>
+        <Pressable onPress={() => router.push('/(tabs)/tasks')}><Text style={styles.link}>Ver todas</Text></Pressable>
       </View>
 
-      {nextTask ? <Pressable
-        style={({ pressed }) => [
-          styles.taskCard,
-          pressed && styles.taskCardPressed,
-        ]}
-        onPress={handleOpenTask}
-      >
-        <View style={styles.taskTitleRow}>
-          <View style={styles.taskDot} />
-          <Text style={styles.taskTitle}>{nextTask.title}</Text>
-          <ArrowRight size={18} color={colors.textSecondary} />
-        </View>
+      {dueSoon.map((task) => (
+        <Pressable
+          key={task.id}
+          onPress={() => router.push({ pathname: '/task-details', params: { taskId: task.id } })}
+          style={({ pressed }) => [styles.issueCard, pressed && styles.pressed]}
+        >
+          <View style={styles.issueMain}>
+            <View style={styles.issueIcon}><CircleDot size={18} color={colors.primary} /></View>
+            <View style={styles.issueCopy}>
+              <Text style={styles.issueId}>#{task.issue} · {task.projectKey}</Text>
+              <Text style={styles.issueTitle}>{task.title}</Text>
+              <Text style={styles.issueMeta}>{task.assignee} · prazo {task.dueDate}</Text>
+            </View>
+          </View>
+          <View style={styles.issueFooter}>
+            <Text style={styles.status}>{statusLabels[task.status]}</Text>
+            <ArrowRight size={17} color={colors.textSecondary} />
+          </View>
+        </Pressable>
+      ))}
 
-        <Text style={styles.taskDescription}>{nextTask.description}</Text>
-
-        <View style={styles.taskMeta}>
-          <CalendarDays size={14} color={colors.textSecondary} />
-          <Text style={styles.taskDate}>{nextTask.date}</Text>
-          <Text style={styles.priority}>{nextTask.priority}</Text>
-        </View>
-
-        <Text style={styles.actionText}>
-          Toque para ver detalhes
-        </Text>
-      </Pressable> : <Text style={styles.emptyText}>Você concluiu todas as tarefas.</Text>}
+      <View style={styles.progressPanel}>
+        <View style={styles.progressHeader}><Text style={styles.sectionTitle}>Progresso do ciclo</Text><Text style={styles.progressValue}>{progress}%</Text></View>
+        <View style={styles.progressTrack}><View style={[styles.progressBar, { width: `${progress}%` }]} /></View>
+        <Text style={styles.progressHint}>{completed} de {tasks.length} issues concluídas no ciclo atual</Text>
+      </View>
     </ScrollView>
   );
 }
 
+function Metric({ value, label, icon }: { value: string; label: string; icon: React.ReactNode }) {
+  return <View style={styles.metric}><View style={styles.metricIcon}>{icon}</View><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricLabel}>{label}</Text></View>;
+}
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    paddingHorizontal: spacing.screen,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.screenBottom,
-  },
-
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacing.lg,
-  },
-
-  eyebrow: {
-    color: colors.textSecondary,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-  },
-
-  greeting: {
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
-    fontSize: 17,
-    fontWeight: '600',
-  },
-
-  avatar: { width: 38, height: 38, borderRadius: 19, backgroundColor: '#F7C6BE', alignItems: 'center', justifyContent: 'center' },
-  avatarText: { color: colors.primaryDark, fontSize: 12, fontWeight: '800' },
-
-  title: {
-    color: colors.text,
-    fontSize: 30,
-    fontWeight: '700',
-    marginBottom: spacing.md,
-  },
-
-  progressCard: {
-    backgroundColor: '#FFF0ED',
-    borderRadius: 14,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  progressIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
-  progressCopy: { flex: 1, marginLeft: spacing.sm },
-  progressValue: { color: colors.text, fontSize: 15, fontWeight: '700', marginTop: 2 },
-
-  progressLabel: {
-    color: colors.primaryDark,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  progressCount: { color: colors.primaryDark, fontSize: 14, fontWeight: '700' },
-
-  addTaskButton: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.sm, marginBottom: spacing.xl },
-  addIcon: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#FFF0ED', alignItems: 'center', justifyContent: 'center', marginRight: spacing.sm },
-  addTaskText: { color: colors.primary, fontSize: 14, fontWeight: '700' },
-
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-
-  sectionTitle: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: spacing.md,
-  },
-
-  sectionHint: { color: colors.textSecondary, fontSize: 12 },
-
-  taskCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-
-  taskCardPressed: {
-    opacity: 0.78,
-  },
-
-  taskTitle: {
-    color: colors.text,
-    fontSize: 17,
-    fontWeight: '600',
-    flex: 1,
-  },
-
-  taskTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  taskDot: { width: 10, height: 10, borderRadius: 5, borderWidth: 2, borderColor: colors.primary },
-
-  taskDescription: {
-    color: colors.textSecondary,
-    fontSize: 14,
-    marginTop: spacing.sm,
-  },
-
-  taskDate: {
-    color: colors.textSecondary,
-    fontSize: 13,
-    fontWeight: '600',
-    marginTop: spacing.sm,
-  },
-
-  taskMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: spacing.sm },
-  priority: { color: colors.primary, fontSize: 12, fontWeight: '700', textTransform: 'capitalize', marginLeft: spacing.sm },
-
-  actionText: {
-    color: colors.primary,
-    fontSize: 13,
-    fontWeight: '600',
-    marginTop: spacing.md,
-  },
-
-  emptyText: {
-    color: colors.textSecondary,
-    fontSize: 16,
-  },
+  container: { backgroundColor: colors.background, paddingHorizontal: spacing.screen, paddingTop: spacing.md, paddingBottom: spacing.screenBottom },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.lg },
+  eyebrow: { color: colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 1 },
+  greeting: { color: colors.text, fontSize: 18, fontWeight: '700', marginTop: spacing.xs },
+  avatar: { width: 40, height: 40, borderRadius: 10, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  brandMark: { width: 40, height: 40, resizeMode: 'cover' },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
+  title: { color: colors.text, fontSize: 30, fontWeight: '800' },
+  subtitle: { color: colors.textSecondary, fontSize: 14, marginTop: spacing.xs },
+  addButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
+  metricsRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xl },
+  metric: { flex: 1, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.sm },
+  metricIcon: { marginBottom: spacing.sm },
+  metricValue: { color: colors.text, fontSize: 20, fontWeight: '800' },
+  metricLabel: { color: colors.textSecondary, fontSize: 11, lineHeight: 15, marginTop: 3 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.sm },
+  sectionTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
+  link: { color: colors.primary, fontSize: 13, fontWeight: '700' },
+  issueCard: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 13, padding: spacing.md, marginBottom: spacing.sm },
+  pressed: { opacity: 0.76 },
+  issueMain: { flexDirection: 'row', alignItems: 'flex-start' },
+  issueIcon: { width: 30, height: 30, borderRadius: 15, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center', marginRight: spacing.sm },
+  issueCopy: { flex: 1 },
+  issueId: { color: colors.primary, fontSize: 11, fontWeight: '800' },
+  issueTitle: { color: colors.text, fontSize: 15, fontWeight: '700', marginTop: 3 },
+  issueMeta: { color: colors.textSecondary, fontSize: 12, marginTop: 6 },
+  issueFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: colors.border, marginTop: spacing.sm, paddingTop: spacing.sm },
+  status: { color: colors.warning, fontSize: 12, fontWeight: '700' },
+  progressPanel: { backgroundColor: colors.primarySoft, borderRadius: 13, padding: spacing.md, marginTop: spacing.md },
+  progressHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  progressValue: { color: colors.primary, fontWeight: '800' },
+  progressTrack: { height: 8, borderRadius: 4, backgroundColor: colors.primaryMuted, marginTop: spacing.md, overflow: 'hidden' },
+  progressBar: { height: '100%', borderRadius: 4, backgroundColor: colors.primary },
+  progressHint: { color: colors.primaryDark, fontSize: 12, marginTop: spacing.sm },
 });

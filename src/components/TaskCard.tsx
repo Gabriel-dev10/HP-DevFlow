@@ -34,7 +34,7 @@ export function TaskCard({ task }: TaskCardProps) {
 
         <View style={styles.metaRow}>
           <CalendarDays size={14} color={colors.textSecondary} />
-          <Text style={styles.date}>{task.date}</Text>
+          <Text style={styles.date}>{task.dueDate}</Text>
           <Text style={styles.priority}>{task.priority}</Text>
         </View>
       </View>

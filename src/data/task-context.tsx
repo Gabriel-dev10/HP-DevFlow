@@ -1,19 +1,23 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
 import { tasks as initialTasks } from './tasks';
-import { Task, TaskPriority } from '../types/task';
+import { Task, TaskPriority, TaskStatus } from '../types/task';
 
 type NewTask = {
   title: string;
   description: string;
-  date: string;
+  dueDate: string;
   priority: TaskPriority;
+  project: string;
+  projectKey: string;
+  assignee: string;
 };
 
 type TaskContextValue = {
   tasks: Task[];
   addTask: (task: NewTask) => void;
   toggleTask: (taskId: string) => void;
+  updateStatus: (taskId: string, status: TaskStatus) => void;
   getTask: (taskId: string) => Task | undefined;
 };
 
@@ -28,9 +32,22 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       {
         ...task,
         id: String(Date.now()),
+        issue: 260 + currentTasks.length,
+        status: 'backlog',
+        gitlabUrl: 'https://gitlab.example.com/hp/devflow/-/issues/new',
         completed: false,
       },
     ]);
+  }
+
+  function updateStatus(taskId: string, status: TaskStatus) {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === taskId
+          ? { ...task, status, completed: status === 'concluido' }
+          : task,
+      ),
+    );
   }
 
   function toggleTask(taskId: string) {
@@ -48,6 +65,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       tasks,
       addTask,
       toggleTask,
+      updateStatus,
       getTask: (taskId: string) =>
         tasks.find((task) => task.id === taskId),
     }),

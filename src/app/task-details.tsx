@@ -1,21 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { CalendarDays, CheckCircle2, Circle, Flag } from 'lucide-react-native';
+import { CalendarDays, CheckCircle2, Circle, ExternalLink, Flag, GitBranch, UserRound } from 'lucide-react-native';
 
 import { Button } from '../components/Button';
 import { useTasks } from '../data/task-context';
 import { colors, spacing } from '../theme';
+import { TaskStatus } from '../types/task';
 
 export default function TaskDetailsScreen() {
   const { taskId } = useLocalSearchParams<{ taskId: string }>();
   const router = useRouter();
-  const { getTask, toggleTask } = useTasks();
+  const { getTask, updateStatus } = useTasks();
   const task = getTask(taskId);
 
   if (!task) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Tarefa não encontrada</Text>
+        <Text style={styles.title}>Issue não encontrada</Text>
         <Button title="Voltar" onPress={() => router.back()} />
       </View>
     );
@@ -25,7 +26,7 @@ export default function TaskDetailsScreen() {
     <View style={styles.container}>
       <View style={styles.statusPill}>
         {task.completed ? <CheckCircle2 size={15} color={colors.success} /> : <Circle size={15} color={colors.primary} />}
-        <Text style={styles.statusPillText}>{task.completed ? 'Concluída' : 'Em andamento'}</Text>
+        <Text style={styles.statusPillText}>{task.completed ? 'Concluída' : task.status === 'revisao' ? 'Em revisão' : task.status === 'desenvolvimento' ? 'Em desenvolvimento' : 'Backlog'}</Text>
       </View>
       <Text style={styles.title}>
         {task.title}
@@ -37,13 +38,35 @@ export default function TaskDetailsScreen() {
         {task.description}
       </Text>
 
+      <View style={styles.projectBlock}>
+        <Text style={styles.projectKey}>{task.projectKey}</Text>
+        <Text style={styles.projectName}>{task.project}</Text>
+        <Text style={styles.issueRef}>Issue #{task.issue}</Text>
+      </View>
+
       <View style={styles.infoRow}>
         <CalendarDays size={17} color={colors.textSecondary} />
         <View>
           <Text style={styles.label}>Data</Text>
-          <Text style={styles.value}>{task.date}</Text>
+          <Text style={styles.value}>{task.dueDate}</Text>
         </View>
       </View>
+
+      <Text style={styles.label}>Status do fluxo</Text>
+      <View style={styles.statusOptions}>
+        {(['backlog', 'desenvolvimento', 'revisao', 'concluido'] as TaskStatus[]).map((option) => (
+          <Pressable key={option} onPress={() => updateStatus(task.id, option)} style={[styles.statusOption, task.status === option && styles.statusOptionActive]}>
+            <Text style={[styles.statusOptionText, task.status === option && styles.statusOptionTextActive]}>{option === 'desenvolvimento' ? 'Em dev' : option === 'revisao' ? 'Revisão' : option === 'concluido' ? 'Concluído' : 'Backlog'}</Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <View style={styles.infoRow}>
+        <UserRound size={17} color={colors.textSecondary} />
+        <View><Text style={styles.label}>Responsável</Text><Text style={styles.value}>{task.assignee}</Text></View>
+      </View>
+
+      <View style={styles.gitlabRow}><GitBranch size={16} color={colors.primary} /><Text style={styles.gitlabText}>GitLab · Issue #{task.issue}</Text><ExternalLink size={15} color={colors.primary} /></View>
 
       <View style={styles.infoRow}>
         <Flag size={17} color={colors.warning} />
@@ -55,8 +78,8 @@ export default function TaskDetailsScreen() {
 
       <View style={styles.button}>
         <Button
-          title={task.completed ? 'Marcar como pendente' : 'Marcar como concluída'}
-          onPress={() => toggleTask(task.id)}
+          title={task.completed ? 'Reabrir issue' : 'Mover para concluído'}
+          onPress={() => updateStatus(task.id, task.completed ? 'desenvolvimento' : 'concluido')}
         />
       </View>
     </View>
@@ -84,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
-    backgroundColor: '#FFF0ED',
+    backgroundColor: colors.primarySoft,
     borderRadius: 20,
     paddingHorizontal: spacing.sm,
     paddingVertical: 6,
@@ -103,6 +126,18 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.md,
   },
+
+  projectBlock: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.md, marginTop: spacing.md },
+  projectKey: { color: colors.primary, fontSize: 11, fontWeight: '800' },
+  projectName: { color: colors.text, fontSize: 16, fontWeight: '800', marginTop: spacing.xs },
+  issueRef: { color: colors.textSecondary, fontSize: 12, marginTop: spacing.xs },
+  gitlabRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: spacing.lg },
+  gitlabText: { color: colors.primary, fontSize: 13, fontWeight: '700', flex: 1 },
+  statusOptions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  statusOption: { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, borderRadius: 18, paddingHorizontal: spacing.sm, paddingVertical: 7 },
+  statusOptionActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  statusOptionText: { color: colors.textSecondary, fontSize: 11, fontWeight: '700' },
+  statusOptionTextActive: { color: colors.surface },
 
   label: {
     color: colors.textSecondary,
