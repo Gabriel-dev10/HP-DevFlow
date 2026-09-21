@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { CalendarDays, ChevronRight, Circle } from 'lucide-react-native';
 
 import { colors, spacing } from '../theme';
 import { Task } from '../types/task';
@@ -22,20 +23,23 @@ export function TaskCard({ task }: TaskCardProps) {
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>{task.title}</Text>
+        <View style={styles.titleRow}>
+          <Circle size={18} color={colors.textSecondary} strokeWidth={1.7} />
+          <Text style={styles.title}>{task.title}</Text>
+        </View>
 
         <Text style={styles.description}>
           {task.description}
         </Text>
 
-        <Text style={styles.date}>
-          {task.date}
-        </Text>
+        <View style={styles.metaRow}>
+          <CalendarDays size={14} color={colors.textSecondary} />
+          <Text style={styles.date}>{task.date}</Text>
+          <Text style={styles.priority}>{task.priority}</Text>
+        </View>
       </View>
 
-      <Text style={styles.priority}>
-        {task.priority}
-      </Text>
+      <ChevronRight size={18} color={colors.textSecondary} />
     </Pressable>
   );
 }
@@ -48,6 +52,9 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: spacing.md,
     marginBottom: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   cardPressed: {
@@ -56,6 +63,14 @@ const styles = StyleSheet.create({
 
   content: {
     gap: spacing.xs,
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
 
   title: {
@@ -70,15 +85,21 @@ const styles = StyleSheet.create({
   },
 
   date: {
-    color: colors.primary,
+    color: colors.textSecondary,
     fontSize: 13,
-    marginTop: spacing.sm,
   },
 
   priority: {
     color: colors.warning,
     fontSize: 12,
     fontWeight: '600',
+    marginTop: spacing.sm,
+  },
+
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
     marginTop: spacing.sm,
   },
 });
