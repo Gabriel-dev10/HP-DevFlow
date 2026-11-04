@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '../../theme';
+import { colors, spacing } from '../../../theme';
 import { Bell, ChevronRight, Palette, Settings } from 'lucide-react-native';
 
 export default function ProfileScreen() {

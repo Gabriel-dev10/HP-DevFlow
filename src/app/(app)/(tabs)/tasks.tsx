@@ -3,9 +3,9 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { CircleDot, Filter, Plus } from 'lucide-react-native';
 
-import { useTasks } from '../../data/task-context';
-import { colors, spacing } from '../../theme';
-import { TaskStatus } from '../../types/task';
+import { useTasks } from '../../../data/task-context';
+import { colors, spacing } from '../../../theme';
+import { TaskStatus } from '../../../types/task';
 
 type FilterType = 'todas' | TaskStatus;
 

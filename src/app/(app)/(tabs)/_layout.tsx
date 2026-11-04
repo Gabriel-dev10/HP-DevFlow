@@ -7,7 +7,7 @@ import {
   UserRound,
 } from 'lucide-react-native';
 
-import { colors } from '../../theme';
+import { colors } from '../../../theme';
 
 export default function TabsLayout() {
   return (

@@ -7,16 +7,16 @@ export default function RootLayout() {
     <TaskProvider>
       <Stack>
         <Stack.Screen
-          name="(tabs)"
+          name="(auth)"
           options={{
             headerShown: false,
           }}
         />
 
         <Stack.Screen
-          name="task-details"
+          name="(app)"
           options={{
-            title: 'Detalhes da issue',
+            headerShown: false,
           }}
         />
 
@@ -24,6 +24,13 @@ export default function RootLayout() {
           name="new-task"
           options={{
             title: 'Nova demanda',
+          }}
+        />
+
+        <Stack.Screen
+          name="task-details"
+          options={{
+            title: 'Detalhes da issue',
           }}
         />
       </Stack>

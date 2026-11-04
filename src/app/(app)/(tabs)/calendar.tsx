@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { FolderKanban, GitBranch } from 'lucide-react-native';
 
-import { useTasks } from '../../data/task-context';
-import { colors, spacing } from '../../theme';
+import { useTasks } from '../../../data/task-context';
+import { colors, spacing } from '../../../theme';
 
 export default function ProjectsScreen() {
   const { tasks } = useTasks();

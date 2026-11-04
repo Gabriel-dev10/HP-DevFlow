@@ -9,8 +9,8 @@ import {
   Plus,
 } from 'lucide-react-native';
 
-import { useTasks } from '../../data/task-context';
-import { colors, spacing } from '../../theme';
+import { useTasks } from '../../../data/task-context';
+import { colors, spacing } from '../../../theme';
 
 const statusLabels = {
   backlog: 'Backlog',

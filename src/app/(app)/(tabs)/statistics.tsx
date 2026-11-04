@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useTasks } from '../../data/task-context';
-import { colors, spacing } from '../../theme';
+import { useTasks } from '../../../data/task-context';
+import { colors, spacing } from '../../../theme';
 import { BarChart3, CheckCircle2, ListChecks, Target } from 'lucide-react-native';
 
 export default function StatisticsScreen() {
