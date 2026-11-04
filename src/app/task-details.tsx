@@ -8,10 +8,11 @@ import { colors, spacing } from '../theme';
 import { TaskStatus } from '../types/task';
 
 export default function TaskDetailsScreen() {
-  const { taskId } = useLocalSearchParams<{ taskId: string }>();
+  const { id, taskId } = useLocalSearchParams<{ id?: string; taskId?: string }>();
   const router = useRouter();
   const { getTask, updateStatus } = useTasks();
-  const task = getTask(taskId);
+  const taskIdParam = id ?? taskId;
+  const task = taskIdParam ? getTask(taskIdParam) : undefined;
 
   if (!task) {
     return (
