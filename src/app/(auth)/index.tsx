@@ -1,12 +1,21 @@
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { useAuth } from '../../data/auth-context';
+
 export default function LoginScreen() {
+  const { signIn } = useAuth();
+
+  function handleLogin() {
+    signIn('aluno@studyflow.com', 'studyflow');
+    router.replace('/');
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>StudyFlow</Text>
       <Text style={styles.subtitle}>Entre para acompanhar suas atividades.</Text>
-      <Pressable style={styles.button} onPress={() => router.replace('/(app)')}>
+      <Pressable style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </Pressable>
     </View>
