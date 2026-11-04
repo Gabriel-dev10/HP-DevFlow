@@ -2,16 +2,16 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CalendarDays, CheckCircle2, Circle, ExternalLink, Flag, GitBranch, UserRound } from 'lucide-react-native';
 
-import { Button } from '../components/Button';
-import { useTasks } from '../data/task-context';
-import { colors, spacing } from '../theme';
-import { TaskStatus } from '../types/task';
+import { Button } from '../../../components/Button';
+import { useTasks } from '../../../data/task-context';
+import { colors, spacing } from '../../../theme';
+import { TaskStatus } from '../../../types/task';
 
 export default function TaskDetailsScreen() {
-  const { taskId } = useLocalSearchParams<{ taskId: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { getTask, updateStatus } = useTasks();
-  const task = getTask(taskId);
+  const task = getTask(id);
 
   if (!task) {
     return (

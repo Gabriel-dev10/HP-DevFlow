@@ -57,13 +57,13 @@ export default function HomeScreen() {
 
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Próximas entregas</Text>
-        <Pressable onPress={() => router.push('/(tabs)/tasks')}><Text style={styles.link}>Ver todas</Text></Pressable>
+        <Pressable onPress={() => router.push('/tasks')}><Text style={styles.link}>Ver todas</Text></Pressable>
       </View>
 
       {dueSoon.map((task) => (
         <Pressable
           key={task.id}
-          onPress={() => router.push({ pathname: '/task-details', params: { taskId: task.id } })}
+          onPress={() => router.push(`/tasks/${task.id}`)}
           style={({ pressed }) => [styles.issueCard, pressed && styles.pressed]}
         >
           <View style={styles.issueMain}>

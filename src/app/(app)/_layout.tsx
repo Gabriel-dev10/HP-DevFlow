@@ -17,6 +17,18 @@ export default function AppLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="new-task"
+        options={{
+          title: 'Nova demanda',
+        }}
+      />
+      <Stack.Screen
+        name="tasks/[id]"
+        options={{
+          title: 'Detalhes da issue',
+        }}
+      />
     </Stack>
   );
 }

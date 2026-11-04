@@ -8,10 +8,10 @@ import {
   View,
 } from 'react-native';
 
-import { Button } from '../components/Button';
-import { useTasks } from '../data/task-context';
-import { colors, spacing } from '../theme';
-import { TaskPriority } from '../types/task';
+import { Button } from '../../components/Button';
+import { useTasks } from '../../data/task-context';
+import { colors, spacing } from '../../theme';
+import { TaskPriority } from '../../types/task';
 import { useRouter } from 'expo-router';
 import { AlignLeft, CalendarDays, Flag } from 'lucide-react-native';
 
@@ -40,7 +40,7 @@ export default function NewTaskScreen() {
       projectKey: project.trim().split(' ').map((word) => word[0]).join('').toUpperCase(),
       assignee: assignee.trim(),
     });
-    router.replace('/(tabs)/tasks');
+    router.replace('/tasks');
   }
 
   return (

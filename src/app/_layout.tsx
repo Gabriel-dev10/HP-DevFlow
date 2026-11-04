@@ -21,20 +21,6 @@ export default function RootLayout() {
               headerShown: false,
             }}
           />
-
-          <Stack.Screen
-            name="new-task"
-            options={{
-              title: 'Nova demanda',
-            }}
-          />
-
-          <Stack.Screen
-            name="task-details"
-            options={{
-              title: 'Detalhes da issue',
-            }}
-          />
         </Stack>
       </TaskProvider>
     </AuthProvider>
