@@ -1,9 +1,20 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { colors, spacing } from '../../../theme';
 import { Bell, ChevronRight, Palette, Settings } from 'lucide-react-native';
+import { Button } from '../../../components/Button';
+import { useAuth } from '../../../data/auth-context';
 
 export default function ProfileScreen() {
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+    router.replace('/(auth)/login');
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.eyebrow}>CONTA</Text>
@@ -18,6 +29,9 @@ export default function ProfileScreen() {
         <Pressable style={styles.option}><Palette size={18} color={colors.textSecondary} /><Text style={styles.optionText}>Tema</Text><Text style={styles.optionValue}>Automático</Text><ChevronRight size={17} color={colors.border} /></Pressable>
         <Pressable style={styles.option}><Settings size={18} color={colors.textSecondary} /><Text style={styles.optionText}>Configurações</Text><ChevronRight size={17} color={colors.border} /></Pressable>
         <View style={styles.summary}><Text style={styles.summaryValue}>12</Text><Text style={styles.summaryLabel}>demandas concluídas neste ciclo</Text></View>
+      </View>
+      <View style={styles.logoutButton}>
+        <Button title="Sair" onPress={handleLogout} />
       </View>
     </View>
   );
@@ -40,4 +54,5 @@ const styles = StyleSheet.create({
   summary: { backgroundColor: colors.primarySoft, borderRadius: 12, padding: spacing.md, marginTop: spacing.md, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   summaryValue: { color: colors.primary, fontSize: 24, fontWeight: '800' },
   summaryLabel: { color: colors.primaryDark, fontSize: 12, fontWeight: '700', flex: 1 },
+  logoutButton: { width: '100%', marginTop: spacing.md },
 });

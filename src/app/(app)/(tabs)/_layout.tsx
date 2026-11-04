@@ -1,9 +1,6 @@
 import { Tabs } from 'expo-router';
 import {
-  BarChart3,
-  CalendarDays,
   Home,
-  ListTodo,
   UserRound,
 } from 'lucide-react-native';
 
@@ -29,32 +26,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
+          title: 'Início',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
-        }}
-      />
-
-      <Tabs.Screen
-        name="tasks"
-        options={{
-          title: 'Issues',
-          tabBarIcon: ({ color, size }) => <ListTodo color={color} size={size} />,
-        }}
-      />
-
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: 'Projetos',
-          tabBarIcon: ({ color, size }) => <CalendarDays color={color} size={size} />,
-        }}
-      />
-
-      <Tabs.Screen
-        name="statistics"
-        options={{
-          title: 'Atividades',
-          tabBarIcon: ({ color, size }) => <BarChart3 color={color} size={size} />,
         }}
       />
 
