@@ -1,32 +1,54 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-type AuthUser = {
-  name: string;
-  email: string;
-};
+import { apagar, salvar, SECURE_KEYS } from '../services/seguro';
+import { get, remove, set, STORAGE_KEYS } from '../services/storage';
+import type { AuthUser } from '../types/api';
 
 type AuthContextValue = {
-  user: AuthUser | null;
-  signIn: (email: string, password: string) => void;
-  signOut: () => void;
+  usuario: AuthUser | null;
+  pronto: boolean;
+  entrar: (email: string, senha: string) => Promise<void>;
+  sair: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [usuario, setUsuario] = useState<AuthUser | null>(null);
+  const [pronto, setPronto] = useState(false);
 
-  function signIn(email: string, _password: string) {
-    setUser({ name: email.split('@')[0] || 'Usuário', email });
+  useEffect(() => {
+    let ativo = true;
+
+    void get<AuthUser | null>(STORAGE_KEYS.sessao, null).then((sessao) => {
+      if (ativo) {
+        setUsuario(sessao);
+        setPronto(true);
+      }
+    });
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  async function entrar(email: string, _senha: string) {
+    const novoUsuario = { name: email.split('@')[0] || 'Usuário', email };
+    await set(STORAGE_KEYS.sessao, novoUsuario);
+    await salvar(SECURE_KEYS.token, 'studyflow-session-token');
+    setUsuario(novoUsuario);
   }
 
-  function signOut() {
-    setUser(null);
+  async function sair() {
+    await remove(STORAGE_KEYS.sessao);
+    await apagar(SECURE_KEYS.token);
+    await remove(STORAGE_KEYS.usersCache);
+    setUsuario(null);
   }
 
   const value = useMemo(
-    () => ({ user, signIn, signOut }),
-    [user],
+    () => ({ usuario, pronto, entrar, sair }),
+    [usuario, pronto],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
