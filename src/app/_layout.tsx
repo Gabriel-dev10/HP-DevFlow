@@ -38,6 +38,10 @@ function Guarda({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  if (segmentos[0] === 'login' || segmentos[0] === '(auth)') {
+    return <Redirect href={'/' as Href} />;
+  }
+
   return <>{children}</>;
 }
 
