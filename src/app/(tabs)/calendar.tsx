@@ -3,13 +3,15 @@ import { FolderKanban, GitBranch } from 'lucide-react-native';
 
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
+import { useTheme } from '../../data/theme-context';
 
 export default function ProjectsScreen() {
+  const { cores } = useTheme();
   const { tasks } = useTasks();
   const projects = Array.from(new Map(tasks.map((task) => [task.project, task])).values());
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
       <Text style={styles.eyebrow}>ORGANIZAÇÃO</Text>
       <Text style={styles.title}>Projetos</Text>
       <Text style={styles.subtitle}>Visão geral dos projetos do seu time.</Text>

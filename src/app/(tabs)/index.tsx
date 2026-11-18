@@ -9,10 +9,12 @@ import { api } from '../../services/api';
 import { comCache } from '../../services/cache';
 import { STORAGE_KEYS } from '../../services/storage';
 import { colors, spacing } from '../../theme';
+import { useTheme } from '../../data/theme-context';
 import type { User } from '../../types/api';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { cores } = useTheme();
   const buscarUsers = useCallback(
     () => comCache(STORAGE_KEYS.usersCache, api.users),
     [],
@@ -31,14 +33,14 @@ export default function HomeScreen() {
   }, [online, recarregar]);
 
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>;
+    return <View style={[styles.center, { backgroundColor: cores.background }]}><ActivityIndicator size="large" color={cores.primary} /></View>;
   }
 
   if (erro) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: cores.background }]}>
         <Text style={styles.error}>{erro}</Text>
-        <Pressable style={styles.retry} onPress={() => void recarregar()}>
+        <Pressable style={[styles.retry, { backgroundColor: cores.primary }]} onPress={() => void recarregar()}>
           <Text style={styles.retryText}>Tentar de novo</Text>
         </Pressable>
       </View>
@@ -50,9 +52,9 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
       {!online && <OfflineBanner />}
-      <Text style={styles.title}>Usuarios</Text>
+      <Text style={[styles.title, { color: cores.text }]}>Usuarios</Text>
       <FlatList
         data={dados}
         keyExtractor={(item) => String(item.id)}
@@ -62,11 +64,11 @@ export default function HomeScreen() {
         ListEmptyComponent={<Text style={styles.empty}>Nenhum usuario encontrado.</Text>}
         renderItem={({ item }) => (
           <Pressable
-            style={({ pressed }) => [styles.userCard, pressed && styles.pressed]}
+            style={({ pressed }) => [styles.userCard, { backgroundColor: cores.surface, borderColor: cores.border }, pressed && styles.pressed]}
             onPress={() => router.push({ pathname: '/user/[id]' as never, params: { id: String(item.id) } })}
           >
-            <Text style={styles.userName}>{item.name}</Text>
-            <Text style={styles.userEmail}>{item.email}</Text>
+            <Text style={[styles.userName, { color: cores.text }]}>{item.name}</Text>
+            <Text style={[styles.userEmail, { color: cores.textSecondary }]}>{item.email}</Text>
           </Pressable>
         )}
       />

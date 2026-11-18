@@ -7,19 +7,20 @@ import {
   UserRound,
 } from 'lucide-react-native';
 
-import { colors } from '../../theme';
+import { useTheme } from '../../data/theme-context';
 
 export default function TabsLayout() {
+  const { cores } = useTheme();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarActiveTintColor: cores.primary,
+        tabBarInactiveTintColor: cores.textSecondary,
         tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
         tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border,
+          backgroundColor: cores.surface,
+          borderTopColor: cores.border,
           height: 72,
           paddingTop: 5,
           paddingBottom: 7,

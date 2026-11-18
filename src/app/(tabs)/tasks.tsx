@@ -6,6 +6,7 @@ import { CircleDot, Filter, Plus } from 'lucide-react-native';
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
 import { TaskStatus } from '../../types/task';
+import { useTheme } from '../../data/theme-context';
 
 type FilterType = 'todas' | TaskStatus;
 
@@ -18,13 +19,14 @@ const statusLabels: Record<FilterType, string> = {
 };
 
 export default function IssuesScreen() {
+  const { cores } = useTheme();
   const [filter, setFilter] = useState<FilterType>('todas');
   const { tasks } = useTasks();
   const router = useRouter();
   const filteredTasks = filter === 'todas' ? tasks : tasks.filter((task) => task.status === filter);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
       <View style={styles.header}>
         <View><Text style={styles.eyebrow}>DEMANDAS DE DESENVOLVIMENTO</Text><Text style={styles.title}>Issues</Text></View>
         <Filter size={21} color={colors.textSecondary} />

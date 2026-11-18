@@ -3,15 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
 import { BarChart3, CheckCircle2, ListChecks, Target } from 'lucide-react-native';
+import { useTheme } from '../../data/theme-context';
 
 export default function StatisticsScreen() {
+  const { cores } = useTheme();
   const { tasks } = useTasks();
   const completed = tasks.filter((task) => task.completed).length;
   const pending = tasks.length - completed;
   const progress = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
       <View style={styles.header}><View><Text style={styles.eyebrow}>VISÃO GERAL</Text><Text style={styles.title}>Estatísticas</Text></View><BarChart3 size={24} color={colors.primary} /></View>
       <Text style={styles.subtitle}>Histórico das alterações nas demandas.</Text>
 

@@ -3,11 +3,13 @@ import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { STORAGE_KEYS } from '../services/storage';
 import type { ThemeName } from '../types/api';
+import { colors, darkColors } from '../theme/colors';
 
 type ThemeContextValue = {
   tema: ThemeName;
   alternarTema: () => void;
   pronto: boolean;
+  cores: typeof colors;
 };
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
@@ -21,6 +23,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const valor = useMemo<ThemeContextValue>(() => ({
     tema,
     pronto,
+    cores: tema === 'escuro' ? darkColors : colors,
     alternarTema: () => atualizarTema((atual) => atual === 'claro' ? 'escuro' : 'claro'),
   }), [atualizarTema, pronto, tema]);
 

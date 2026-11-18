@@ -8,7 +8,7 @@ import type { Href } from 'expo-router';
 import { Bell, ChevronRight, Palette, Settings } from 'lucide-react-native';
 
 export default function ProfileScreen() {
-  const { tema, alternarTema } = useTheme();
+  const { tema, alternarTema, cores } = useTheme();
   const { usuario, sair } = useAuth();
 
   async function handleLogout() {
@@ -17,27 +17,27 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.eyebrow}>CONTA</Text>
-      <Text style={styles.title}>Perfil</Text>
-      <View style={styles.avatar}><Text style={styles.avatarText}>GS</Text></View>
-      <Text style={styles.name}>{usuario?.name ?? 'Gabriel Silva'}</Text>
-      <Text style={styles.email}>{usuario?.email ?? 'gabriel.silva@hp.dev'}</Text>
-      <Text style={styles.role}>Desenvolvedor · 2 projetos associados</Text>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
+      <Text style={[styles.eyebrow, { color: cores.textSecondary }]}>CONTA</Text>
+      <Text style={[styles.title, { color: cores.text }]}>Perfil</Text>
+      <View style={[styles.avatar, { backgroundColor: cores.primary }]}><Text style={styles.avatarText}>GS</Text></View>
+      <Text style={[styles.name, { color: cores.text }]}>{usuario?.name ?? 'Gabriel Silva'}</Text>
+      <Text style={[styles.email, { color: cores.textSecondary }]}>{usuario?.email ?? 'gabriel.silva@hp.dev'}</Text>
+      <Text style={[styles.role, { color: cores.primary }]}>Desenvolvedor · 2 projetos associados</Text>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Preferências</Text>
-        <Pressable style={styles.option}><Bell size={18} color={colors.textSecondary} /><Text style={styles.optionText}>Notificações</Text><Text style={styles.optionValue}>Ativadas</Text><ChevronRight size={17} color={colors.border} /></Pressable>
-        <View style={styles.option}>
-          <Palette size={18} color={colors.textSecondary} />
-          <Text style={styles.optionText}>Modo escuro</Text>
+        <Text style={[styles.sectionTitle, { color: cores.text }]}>Preferências</Text>
+        <Pressable style={[styles.option, { backgroundColor: cores.surface, borderColor: cores.border }]}><Bell size={18} color={cores.textSecondary} /><Text style={[styles.optionText, { color: cores.text }]}>Notificações</Text><Text style={[styles.optionValue, { color: cores.textSecondary }]}>Ativadas</Text><ChevronRight size={17} color={cores.border} /></Pressable>
+        <View style={[styles.option, { backgroundColor: cores.surface, borderColor: cores.border }]}>
+          <Palette size={18} color={cores.textSecondary} />
+          <Text style={[styles.optionText, { color: cores.text }]}>Modo escuro</Text>
           <Switch
             value={tema === 'escuro'}
             onValueChange={alternarTema}
             accessibilityLabel="Modo escuro"
           />
         </View>
-        <Pressable style={styles.option}><Settings size={18} color={colors.textSecondary} /><Text style={styles.optionText}>Configurações</Text><ChevronRight size={17} color={colors.border} /></Pressable>
-        <View style={styles.summary}><Text style={styles.summaryValue}>12</Text><Text style={styles.summaryLabel}>demandas concluídas neste ciclo</Text></View>
+        <Pressable style={[styles.option, { backgroundColor: cores.surface, borderColor: cores.border }]}><Settings size={18} color={cores.textSecondary} /><Text style={[styles.optionText, { color: cores.text }]}>Configurações</Text><ChevronRight size={17} color={cores.border} /></Pressable>
+        <View style={[styles.summary, { backgroundColor: cores.primarySoft }]}><Text style={[styles.summaryValue, { color: cores.primary }]}>12</Text><Text style={[styles.summaryLabel, { color: cores.primaryDark }]}>demandas concluídas neste ciclo</Text></View>
         <Pressable style={styles.logout} onPress={() => void handleLogout()}>
           <Text style={styles.logoutText}>Sair</Text>
         </Pressable>

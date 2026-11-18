@@ -3,9 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Href } from 'expo-router';
 
 import { useAuth } from '../data/auth-context';
+import { useTheme } from '../data/theme-context';
 
 export default function LoginScreen() {
   const { entrar } = useAuth();
+  const { cores } = useTheme();
 
   async function handleLogin() {
     await entrar('aluno@studyflow.com', 'studyflow');
@@ -13,9 +15,9 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>StudyFlow</Text>
-      <Text style={styles.subtitle}>Entre para acompanhar suas atividades.</Text>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
+      <Text style={[styles.title, { color: cores.text }]}>StudyFlow</Text>
+      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Entre para acompanhar suas atividades.</Text>
       <Pressable style={styles.button} onPress={() => void handleLogin()}>
         <Text style={styles.buttonText}>Entrar</Text>
       </Pressable>
