@@ -28,21 +28,21 @@ export default function IssuesScreen() {
   return (
     <View style={[styles.container, { backgroundColor: cores.background }]}>
       <View style={styles.header}>
-        <View><Text style={styles.eyebrow}>DEMANDAS DE DESENVOLVIMENTO</Text><Text style={styles.title}>Issues</Text></View>
-        <Filter size={21} color={colors.textSecondary} />
+        <View><Text style={[styles.eyebrow, { color: cores.primary }]}>DEMANDAS DE DESENVOLVIMENTO</Text><Text style={[styles.title, { color: cores.text }]}>Issues</Text></View>
+        <Filter size={21} color={cores.textSecondary} />
       </View>
-      <Text style={styles.subtitle}>Acompanhe as issues atribuídas ao seu time.</Text>
+      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Acompanhe as issues atribuídas ao seu time.</Text>
 
       <View style={styles.filters}>
         {(Object.keys(statusLabels) as FilterType[]).map((option) => (
-          <Pressable key={option} onPress={() => setFilter(option)} style={[styles.filterButton, filter === option && styles.filterButtonActive]}>
-            <Text style={[styles.filterText, filter === option && styles.filterTextActive]}>{statusLabels[option]}</Text>
+          <Pressable key={option} onPress={() => setFilter(option)} style={[styles.filterButton, { backgroundColor: cores.surface, borderColor: cores.border }, filter === option && [styles.filterButtonActive, { backgroundColor: cores.primary, borderColor: cores.primary }]]}>
+            <Text style={[styles.filterText, { color: cores.textSecondary }, filter === option && [styles.filterTextActive, { color: cores.surface }]]}>{statusLabels[option]}</Text>
           </Pressable>
         ))}
       </View>
 
-      <Pressable style={styles.newButton} onPress={() => router.push('/new-task')}>
-        <Plus size={18} color={colors.surface} /><Text style={styles.newButtonText}>Nova demanda</Text>
+      <Pressable style={[styles.newButton, { backgroundColor: cores.primary }]} onPress={() => router.push('/new-task')}>
+        <Plus size={18} color={cores.surface} /><Text style={[styles.newButtonText, { color: cores.surface }]}>Nova demanda</Text>
       </Pressable>
 
       <FlatList
@@ -51,11 +51,11 @@ export default function IssuesScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <Pressable style={({ pressed }) => [styles.issueCard, pressed && styles.pressed]} onPress={() => router.push({ pathname: '/task-details/[id]' as never, params: { id: item.id } })}>
-            <View style={styles.issueHeader}><Text style={styles.issueNumber}>#{item.issue}</Text><Text style={styles.project}>{item.projectKey}</Text><Text style={[styles.priority, item.priority === 'alta' && styles.highPriority]}>{item.priority}</Text></View>
-            <View style={styles.issueTitleRow}><CircleDot size={18} color={item.status === 'concluido' ? colors.success : colors.primary} /><Text style={styles.issueTitle}>{item.title}</Text></View>
-            <Text style={styles.description} numberOfLines={2}>{item.description}</Text>
-            <View style={styles.issueFooter}><Text style={styles.assignee}>{item.assignee}</Text><Text style={styles.dueDate}>Prazo {item.dueDate}</Text></View>
+          <Pressable style={({ pressed }) => [styles.issueCard, { backgroundColor: cores.surface, borderColor: cores.border }, pressed && styles.pressed]} onPress={() => router.push({ pathname: '/task-details/[id]' as never, params: { id: item.id } })}>
+            <View style={styles.issueHeader}><Text style={[styles.issueNumber, { color: cores.primary }]}>#{item.issue}</Text><Text style={[styles.project, { color: cores.textSecondary }]}>{item.projectKey}</Text><Text style={[styles.priority, { color: item.priority === 'alta' ? cores.danger : cores.textSecondary }]}>{item.priority}</Text></View>
+            <View style={styles.issueTitleRow}><CircleDot size={18} color={item.status === 'concluido' ? cores.success : cores.primary} /><Text style={[styles.issueTitle, { color: cores.text }]}>{item.title}</Text></View>
+            <Text style={[styles.description, { color: cores.textSecondary }]} numberOfLines={2}>{item.description}</Text>
+            <View style={[styles.issueFooter, { borderTopColor: cores.border }]}><Text style={[styles.assignee, { color: cores.text }]}>{item.assignee}</Text><Text style={[styles.dueDate, { color: cores.textSecondary }]}>Prazo {item.dueDate}</Text></View>
           </Pressable>
         )}
         ListEmptyComponent={<Text style={styles.empty}>Nenhuma issue neste status.</Text>}

@@ -14,28 +14,28 @@ export default function StatisticsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: cores.background }]}>
-      <View style={styles.header}><View><Text style={styles.eyebrow}>VISÃO GERAL</Text><Text style={styles.title}>Estatísticas</Text></View><BarChart3 size={24} color={colors.primary} /></View>
-      <Text style={styles.subtitle}>Histórico das alterações nas demandas.</Text>
+      <View style={styles.header}><View><Text style={[styles.eyebrow, { color: cores.textSecondary }]}>VISÃO GERAL</Text><Text style={[styles.title, { color: cores.text }]}>Estatísticas</Text></View><BarChart3 size={24} color={cores.primary} /></View>
+      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Histórico das alterações nas demandas.</Text>
 
-      <View style={styles.hero}>
-        <Target size={24} color={colors.surface} />
-        <Text style={styles.heroValue}>{progress}%</Text>
-          <Text style={styles.heroLabel}>das entregas concluídas</Text>
+      <View style={[styles.hero, { backgroundColor: cores.primary }]}>
+        <Target size={24} color={cores.surface} />
+        <Text style={[styles.heroValue, { color: cores.surface }]}>{progress}%</Text>
+          <Text style={[styles.heroLabel, { color: cores.surface }]}>das entregas concluídas</Text>
       </View>
 
       <View style={styles.row}>
-          <View style={styles.card}><ListChecks size={18} color={colors.primary} /><Text style={styles.value}>{tasks.length}</Text><Text style={styles.label}>Alterações</Text></View>
-        <View style={styles.card}><CheckCircle2 size={18} color={colors.success} /><Text style={styles.value}>{completed}</Text><Text style={styles.label}>Concluídas</Text></View>
-        <View style={styles.card}><Target size={18} color={colors.warning} /><Text style={styles.value}>{pending}</Text><Text style={styles.label}>Pendentes</Text></View>
+          <View style={[styles.card, { backgroundColor: cores.surface, borderColor: cores.border }]}><ListChecks size={18} color={cores.primary} /><Text style={[styles.value, { color: cores.text }]}>{tasks.length}</Text><Text style={[styles.label, { color: cores.textSecondary }]}>Alterações</Text></View>
+        <View style={[styles.card, { backgroundColor: cores.surface, borderColor: cores.border }]}><CheckCircle2 size={18} color={cores.success} /><Text style={[styles.value, { color: cores.text }]}>{completed}</Text><Text style={[styles.label, { color: cores.textSecondary }]}>Concluídas</Text></View>
+        <View style={[styles.card, { backgroundColor: cores.surface, borderColor: cores.border }]}><Target size={18} color={cores.warning} /><Text style={[styles.value, { color: cores.text }]}>{pending}</Text><Text style={[styles.label, { color: cores.textSecondary }]}>Pendentes</Text></View>
       </View>
 
-      <Text style={styles.activityTitle}>Atividade recente</Text>
+      <Text style={[styles.activityTitle, { color: cores.text }]}>Atividade recente</Text>
       {tasks.slice(0, 3).map((task) => (
-        <View key={task.id} style={styles.activity}>
-          <View style={styles.activityDot} />
+        <View key={task.id} style={[styles.activity, { backgroundColor: cores.surface, borderColor: cores.border }]}>
+          <View style={[styles.activityDot, { backgroundColor: cores.primary }]} />
           <View style={styles.activityCopy}>
-            <Text style={styles.activityText}>Issue #{task.issue} está em {task.status === 'desenvolvimento' ? 'desenvolvimento' : task.status === 'revisao' ? 'revisão' : task.status === 'concluido' ? 'concluído' : 'backlog'}</Text>
-            <Text style={styles.activityMeta}>{task.projectKey} · {task.assignee}</Text>
+            <Text style={[styles.activityText, { color: cores.text }]}>Issue #{task.issue} está em {task.status === 'desenvolvimento' ? 'desenvolvimento' : task.status === 'revisao' ? 'revisão' : task.status === 'concluido' ? 'concluído' : 'backlog'}</Text>
+            <Text style={[styles.activityMeta, { color: cores.textSecondary }]}>{task.projectKey} · {task.assignee}</Text>
           </View>
         </View>
       ))}

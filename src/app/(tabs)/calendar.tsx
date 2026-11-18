@@ -12,9 +12,9 @@ export default function ProjectsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: cores.background }]}>
-      <Text style={styles.eyebrow}>ORGANIZAÇÃO</Text>
-      <Text style={styles.title}>Projetos</Text>
-      <Text style={styles.subtitle}>Visão geral dos projetos do seu time.</Text>
+      <Text style={[styles.eyebrow, { color: cores.primary }]}>ORGANIZAÇÃO</Text>
+      <Text style={[styles.title, { color: cores.text }]}>Projetos</Text>
+      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Visão geral dos projetos do seu time.</Text>
       <FlatList
         data={projects}
         keyExtractor={(item) => item.project}
@@ -22,14 +22,14 @@ export default function ProjectsScreen() {
           const projectTasks = tasks.filter((task) => task.project === item.project);
           const done = projectTasks.filter((task) => task.completed).length;
           return (
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: cores.surface, borderColor: cores.border }]}>
               <View style={styles.cardHeader}>
-                <View style={styles.icon}><FolderKanban size={19} color={colors.primary} /></View>
-                <View style={styles.copy}><Text style={styles.key}>{item.projectKey}</Text><Text style={styles.project}>{item.project}</Text></View>
-                <Text style={styles.count}>{projectTasks.length} issues</Text>
+                <View style={[styles.icon, { backgroundColor: cores.primarySoft }]}><FolderKanban size={19} color={cores.primary} /></View>
+                <View style={styles.copy}><Text style={[styles.key, { color: cores.primary }]}>{item.projectKey}</Text><Text style={[styles.project, { color: cores.text }]}>{item.project}</Text></View>
+                <Text style={[styles.count, { color: cores.textSecondary }]}>{projectTasks.length} issues</Text>
               </View>
-              <View style={styles.progressTrack}><View style={[styles.progress, { width: `${projectTasks.length ? (done / projectTasks.length) * 100 : 0}%` }]} /></View>
-              <View style={styles.footer}><Text style={styles.meta}><GitBranch size={13} color={colors.textSecondary} /> {projectTasks.filter((task) => !task.completed).length} abertas</Text><Text style={styles.meta}>{done}/{projectTasks.length} concluídas</Text></View>
+              <View style={[styles.progressTrack, { backgroundColor: cores.border }]}><View style={[styles.progress, { width: `${projectTasks.length ? (done / projectTasks.length) * 100 : 0}%`, backgroundColor: cores.primary }]} /></View>
+              <View style={styles.footer}><Text style={[styles.meta, { color: cores.textSecondary }]}><GitBranch size={13} color={cores.textSecondary} /> {projectTasks.filter((task) => !task.completed).length} abertas</Text><Text style={[styles.meta, { color: cores.textSecondary }]}>{done}/{projectTasks.length} concluídas</Text></View>
             </View>
           );
         }}
