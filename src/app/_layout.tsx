@@ -1,4 +1,5 @@
 import { Redirect, Stack } from 'expo-router';
+import type { Href } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -24,7 +25,7 @@ function Guarda({ children }: { children: React.ReactNode }) {
   }
 
   if (!usuario) {
-    return <Redirect href="/login" />;
+    return <Redirect href={'/login' as Href} />;
   }
 
   return <>{children}</>;

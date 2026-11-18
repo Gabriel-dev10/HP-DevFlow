@@ -10,10 +10,6 @@ export async function comCache<T>(
   buscar: () => Promise<T>,
   ttlMs = 5 * 60_000,
 ): Promise<T> {
-  const falha = () => {
-    throw new Error('Cache nao disponivel');
-  };
-
   const entradaPadrao: CacheEntry<T> | null = null;
   const entrada = await get<CacheEntry<T> | null>(chave, entradaPadrao);
   const agora = Date.now();
@@ -33,6 +29,6 @@ export async function comCache<T>(
     if (error instanceof Error) {
       throw error;
     }
-    falha();
+    throw new Error('Cache nao disponivel');
   }
 }

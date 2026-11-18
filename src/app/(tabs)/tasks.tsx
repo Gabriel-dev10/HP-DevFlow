@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import type { Href } from 'expo-router';
 import { CircleDot, Filter, Plus } from 'lucide-react-native';
 
 import { useTasks } from '../../data/task-context';
@@ -49,7 +50,7 @@ export default function IssuesScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <Pressable style={({ pressed }) => [styles.issueCard, pressed && styles.pressed]} onPress={() => router.push({ pathname: '/task-details/[id]', params: { id: item.id } })}>
+          <Pressable style={({ pressed }) => [styles.issueCard, pressed && styles.pressed]} onPress={() => router.push({ pathname: '/task-details/[id]' as Href, params: { id: item.id } })}>
             <View style={styles.issueHeader}><Text style={styles.issueNumber}>#{item.issue}</Text><Text style={styles.project}>{item.projectKey}</Text><Text style={[styles.priority, item.priority === 'alta' && styles.highPriority]}>{item.priority}</Text></View>
             <View style={styles.issueTitleRow}><CircleDot size={18} color={item.status === 'concluido' ? colors.success : colors.primary} /><Text style={styles.issueTitle}>{item.title}</Text></View>
             <Text style={styles.description} numberOfLines={2}>{item.description}</Text>

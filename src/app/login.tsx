@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import type { Href } from 'expo-router';
 
 import { useAuth } from '../data/auth-context';
 
@@ -8,7 +9,7 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     await entrar('aluno@studyflow.com', 'studyflow');
-    router.replace('/(app)/(tabs)');
+    router.replace('/(app)/(tabs)' as Href);
   }
 
   return (

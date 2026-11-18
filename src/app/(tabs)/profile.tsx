@@ -4,6 +4,7 @@ import { colors, spacing } from '../../theme';
 import { useTheme } from '../../data/theme-context';
 import { useAuth } from '../../data/auth-context';
 import { router } from 'expo-router';
+import type { Href } from 'expo-router';
 import { Bell, ChevronRight, Palette, Settings } from 'lucide-react-native';
 
 export default function ProfileScreen() {
@@ -12,7 +13,7 @@ export default function ProfileScreen() {
 
   async function handleLogout() {
     await sair();
-    router.replace('/login');
+    router.replace('/login' as Href);
   }
 
   return (
