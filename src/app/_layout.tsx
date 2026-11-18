@@ -1,6 +1,7 @@
 import { Redirect, Stack } from 'expo-router';
 import type { Href } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AuthProvider, useAuth } from '../data/auth-context';
@@ -8,6 +9,11 @@ import { TaskProvider } from '../data/task-context';
 import { ThemeProvider, useTheme } from '../data/theme-context';
 
 void SplashScreen.preventAutoHideAsync();
+
+function StatusBarDoTema() {
+  const { tema } = useTheme();
+  return <StatusBar style={tema === 'escuro' ? 'light' : 'dark'} />;
+}
 
 function Guarda({ children }: { children: React.ReactNode }) {
   const { usuario, pronto } = useAuth();
@@ -33,6 +39,7 @@ function Guarda({ children }: { children: React.ReactNode }) {
 export default function RootLayout() {
   return (
     <ThemeProvider>
+      <StatusBarDoTema />
       <AuthProvider>
         <TaskProvider>
           <Guarda>
