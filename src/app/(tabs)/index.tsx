@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import type { Href } from 'expo-router';
 
 import { OfflineBanner } from '../../components/OfflineBanner';
 import { useFetch } from '../../hooks/useFetch';
@@ -63,7 +62,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <Pressable
             style={({ pressed }) => [styles.userCard, pressed && styles.pressed]}
-            onPress={() => router.push({ pathname: '/user/[id]' as Href, params: { id: String(item.id) } })}
+            onPress={() => router.push({ pathname: '/user/[id]' as never, params: { id: String(item.id) } })}
           >
             <Text style={styles.userName}>{item.name}</Text>
             <Text style={styles.userEmail}>{item.email}</Text>
