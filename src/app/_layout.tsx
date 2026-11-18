@@ -1,4 +1,4 @@
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, Stack, useSegments } from 'expo-router';
 import type { Href } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -18,6 +18,7 @@ function StatusBarDoTema() {
 function Guarda({ children }: { children: React.ReactNode }) {
   const { usuario, pronto } = useAuth();
   const { pronto: temaPronto } = useTheme();
+  const segmentos = useSegments();
 
   useEffect(() => {
     if (pronto && temaPronto) {
@@ -30,7 +31,11 @@ function Guarda({ children }: { children: React.ReactNode }) {
   }
 
   if (!usuario) {
-    return <Redirect href={'/login' as Href} />;
+    const primeiraRota = segmentos[0];
+    if (primeiraRota !== 'login' && primeiraRota !== '(auth)') {
+      return <Redirect href={'/login' as Href} />;
+    }
+    return <>{children}</>;
   }
 
   return <>{children}</>;
