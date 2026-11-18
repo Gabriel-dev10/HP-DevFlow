@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useFetch } from '../../../hooks/useFetch';
@@ -15,14 +15,21 @@ export default function UserDetailScreen() {
     () => api.user(id ?? ''),
     [id],
   );
-  const { dados, loading, erro } = useFetch<User>(buscarUsuario);
+  const { dados, loading, erro, recarregar } = useFetch<User>(buscarUsuario);
 
   if (loading) {
     return <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>;
   }
 
   if (erro) {
-    return <View style={styles.center}><Text style={styles.error}>{erro}</Text></View>;
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>{erro}</Text>
+        <Pressable style={styles.retry} onPress={() => void recarregar()}>
+          <Text style={styles.retryText}>Tentar de novo</Text>
+        </Pressable>
+      </View>
+    );
   }
 
   if (!dados) {
@@ -47,4 +54,6 @@ const styles = StyleSheet.create({
   label: { color: colors.textSecondary, marginTop: spacing.md },
   value: { color: colors.text, fontSize: 16, fontWeight: '600', marginTop: spacing.xs },
   error: { color: colors.danger, textAlign: 'center' },
+  retry: { backgroundColor: colors.primary, borderRadius: 8, marginTop: spacing.md, paddingHorizontal: spacing.lg, paddingVertical: spacing.sm },
+  retryText: { color: colors.surface, fontWeight: '700' },
 });
