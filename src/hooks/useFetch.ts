@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type UseFetchResult<T> = {
   dados: T | null;
@@ -11,6 +11,14 @@ export function useFetch<T>(buscar: () => Promise<T>): UseFetchResult<T> {
   const [dados, setDados] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const montado = useRef(true);
+
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+    };
+  }, []);
 
   const recarregar = useCallback(async () => {
     setLoading(true);
@@ -18,11 +26,17 @@ export function useFetch<T>(buscar: () => Promise<T>): UseFetchResult<T> {
 
     try {
       const resultado = await buscar();
-      setDados(resultado);
+      if (montado.current) {
+        setDados(resultado);
+      }
     } catch (error) {
-      setErro(error instanceof Error ? error.message : 'Nao foi possivel carregar os dados');
+      if (montado.current) {
+        setErro(error instanceof Error ? error.message : 'Nao foi possivel carregar os dados');
+      }
     } finally {
-      setLoading(false);
+      if (montado.current) {
+        setLoading(false);
+      }
     }
   }, [buscar]);
 
