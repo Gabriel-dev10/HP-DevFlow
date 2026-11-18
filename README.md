@@ -21,3 +21,63 @@ O HP DevFlow organiza issues, projetos, responsáveis, prazos e status de entreg
 - Fluxo Backlog, Em desenvolvimento, Em revisão e Concluído
 - Atividades recentes e progresso de entregas
 - Perfil profissional do desenvolvedor
+
+## Melhorias da P2
+
+### API e usuários
+
+- Consumo da API JSONPlaceholder com o serviço `api`.
+- Lista de usuários com estados de carregamento, erro, lista vazia e sucesso.
+- Atualização da lista ao puxar a tela.
+- Tela de detalhes com nome, e-mail e cidade do usuário.
+
+### Armazenamento local
+
+- Wrapper tipado sobre o `AsyncStorage`.
+- Dados corrompidos são substituídos pelo valor padrão.
+- Hook `usePersistedState` para guardar dados ao alterar.
+
+### Tema
+
+- Tema claro e escuro persistidos no app.
+- Switch de modo escuro na tela de Perfil.
+- Telas, cartões, textos, navegação e barra de status acompanham o tema.
+- Splash permanece ativo até tema e sessão serem carregados.
+
+### Sessão
+
+- Usuário salvo no `AsyncStorage`.
+- Token salvo no `SecureStore`, somente em plataformas não web.
+- Logout limpa sessão, token e cache.
+- Login não aparece novamente enquanto houver sessão ativa.
+
+### Cache e conexão
+
+- Cache da lista de usuários com TTL de 5 minutos.
+- Cache antigo exibido quando a API falha.
+- Banner “Você está offline”.
+- Reconexão atualiza a lista automaticamente.
+
+## Como executar
+
+```powershell
+npm install
+copy .env.example .env
+npx expo start
+```
+
+Para abrir no navegador:
+
+```powershell
+npx expo start --web
+```
+
+Antes de executar, configure `EXPO_PUBLIC_API_URL` no arquivo `.env`.
+
+## Testes manuais recomendados
+
+1. Confirme os estados de carregamento, erro, vazio e sucesso da lista.
+2. Ative o modo avião e verifique o banner offline e o cache.
+3. Escolha o modo escuro, feche e reabra o app.
+4. Entre no app, feche e reabra sem voltar ao Login.
+5. Faça logout e confirme a limpeza da sessão e do cache.
