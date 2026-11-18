@@ -1,22 +1,22 @@
-# StudyFlow ⚡ HP DevFlow
+# StudyFlow - HP DevFlow
 
 > **Hub mobile para gestão ágil de demandas e acompanhamento técnico de equipes de engenharia.**  
 > Projeto prático desenvolvido para a disciplina de **Aplicativos Híbridos — Univassouras**.
 
 ---
 
-## 💡 Sobre o Projeto
+## Sobre o Projeto
 
-O **StudyFlow (HP DevFlow)** é um aplicativo mobile multiplataforma (iOS, Android e Web) construído com **React Native** e **Expo (SDK 57)**. Inspirado no ecossistema de ferramentas como GitLab e Jira, o app resolve a necessidade de acompanhamento ágil de issues, ciclo de entrega de software (Backlog ➔ Dev ➔ Revisão ➔ Concluído) e alocação de desenvolvedores.
+O **StudyFlow (HP DevFlow)** é um aplicativo mobile multiplataforma (iOS, Android e Web) construído com **React Native** e **Expo (SDK 57)**. Inspirado no ecossistema de ferramentas como GitLab e Jira, o app resolve a necessidade de acompanhamento ágil de issues, ciclo de entrega de software (Backlog -> Dev -> Revisão -> Concluído) e alocação de desenvolvedores.
 
 O app combina dados de catálogo de membros vindos da API REST pública **JSONPlaceholder** com um motor local de persistência, cache com tolerância a falhas e tematização dinâmica, assegurando que o desenvolvedor continue produtivo mesmo em ambientes de baixa ou nenhuma conectividade.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
 - **Core:** React 19, React Native 0.86, TypeScript 6
-- **Framework & Roteamento:** Expo SDK 57, Expo Router (navegação declarativa e file-based)
+- **Framework & Roteamento:** Expo SDK 57, Expo Router (navegação declarativa e baseada em arquivos)
 - **Persistência Segura:** `expo-secure-store` (Criptografia Keychain/Keystore)
 - **Persistência de Dados:** `@react-native-async-storage/async-storage` com Generics tipados
 - **Conectividade:** `@react-native-community/netinfo`
@@ -26,7 +26,7 @@ O app combina dados de catálogo de membros vindos da API REST pública **JSONPl
 
 ---
 
-## 🚀 Guia Rápido de Inicialização
+## Guia Rápido de Inicialização
 
 ### Passo a Passo
 
@@ -54,7 +54,7 @@ A tela de login conta com validação de formato e aceita qualquer e-mail com do
 
 ---
 
-## 🧪 Suíte de Testes Automatizados
+## Suíte de Testes Automatizados
 
 Para certificar todos os fluxos críticos de negócio, persistência e resiliência offline, o projeto conta com uma suíte de testes de integração executável diretamente via Node:
 
@@ -71,7 +71,7 @@ npx eslint .
 
 ---
 
-## 🏛️ Fluxo e Engenharia da Solução
+## Fluxo e Engenharia da Solução
 
 ```mermaid
 flowchart TD
@@ -113,7 +113,7 @@ flowchart TD
 
 ---
 
-## 📱 Domínios Funcionais e Mapeamento de Telas
+## Domínios Funcionais e Mapeamento de Telas
 
 Em vez de menus estáticos, o StudyFlow organiza a experiência do desenvolvedor em cinco domínios principais:
 
@@ -139,7 +139,7 @@ Em vez de menus estáticos, o StudyFlow organiza a experiência do desenvolvedor
 
 ---
 
-## 🛡️ Pilares Técnicos da Aplicação
+## Pilares Técnicos da Aplicação
 
 ### 1. Estratégia de Rede e Modo Offline-First
 * **Cache com Validade Temporal (TTL de 5 minutos):** Toda requisição bem-sucedida ao catálogo de usuários é guardada com carimbo de data/hora (`salvoEm`). Requisições seguintes dentro de 5 minutos são resolvidas a partir do disco, economizando dados e bateria.
@@ -148,7 +148,7 @@ Em vez de menus estáticos, o StudyFlow organiza a experiência do desenvolvedor
 
 ### 2. Armazenamento Seguro vs Armazenamento Geral
 * **Cofre Seguro (`services/seguro.ts`):** O token de sessão é isolado no hardware seguro do dispositivo (`expo-secure-store` via iOS Keychain e Android Keystore). O acesso é bloqueado em ambiente web para evitar exposição a ataques de XSS no `localStorage`.
-* **AsyncStorage com Wrapper Tipado (`services/storage.ts`):** O acesso a preferências de tema, sessão e demandas é realizado através de funções genéricas `get<T>` e `set<T>`. Qualquer corrupção ou JSON inválido em disco é capturado por `try/catch` e substituído pelo valor padrão, impedindo *white screens* de travamento.
+* **AsyncStorage com Wrapper Tipado (`services/storage.ts`):** O acesso a preferências de tema, sessão e demandas é realizado através de funções genéricas `get<T>` e `set<T>`. Qualquer corrupção ou JSON inválido em disco é capturado por `try/catch` e substituído pelo valor padrão, impedindo telas em branco por travamento.
 * **Sincronização Reativa com `usePersistedState`:** Permite que qualquer alteração de estado no React seja refletida e gravada de forma síncrona no armazenamento permanente.
 
 ### 3. Tematização Imersiva (Dark & Light Mode)
@@ -164,7 +164,7 @@ Em vez de menus estáticos, o StudyFlow organiza a experiência do desenvolvedor
 
 ---
 
-## 📁 Estrutura de Pastas do Projeto
+## Estrutura de Pastas do Projeto
 
 ```text
 StudyFlow/
@@ -194,7 +194,7 @@ StudyFlow/
 
 ---
 
-## 📋 Resumo de Requisitos Atendidos da Disciplina
+## Resumo de Requisitos Atendidos da Disciplina
 
 | Requisito Avaliado | Implementação no StudyFlow | Evidência no Código |
 | :--- | :--- | :--- |
@@ -210,5 +210,5 @@ StudyFlow/
 | **Tolerância Offline** | Exibição de cache antigo quando API falha | `comCache` em `src/services/cache.ts` |
 | **Banner Offline** | Alerta visual imediato ao perder conexão | `src/components/OfflineBanner.tsx` |
 | **Reconexão Autônoma** | Atualização automática ao restaurar conectividade | Listener em `src/app/(tabs)/index.tsx` |
-| **Responsividade Total** | Safe Area, KeyboardAvoidingView e alvos ≥44pt | Presente em todas as 9 telas |
+| **Responsividade Total** | Safe Area, KeyboardAvoidingView e alvos >= 44pt | Presente em todas as 9 telas |
 | **Testes Automatizados** | Suíte cobrindo todos os cenários práticos | `npm test` (`run-audit-tests.js`) |
