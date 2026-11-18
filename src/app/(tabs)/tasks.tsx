@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { CircleDot, Filter, Plus } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
@@ -20,76 +21,310 @@ const statusLabels: Record<FilterType, string> = {
 
 export default function IssuesScreen() {
   const { cores } = useTheme();
+  const insets = useSafeAreaInsets();
   const [filter, setFilter] = useState<FilterType>('todas');
   const { tasks } = useTasks();
   const router = useRouter();
   const filteredTasks = filter === 'todas' ? tasks : tasks.filter((task) => task.status === filter);
 
   return (
-    <View style={[styles.container, { backgroundColor: cores.background }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: cores.background,
+          paddingTop: Math.max(insets.top, spacing.md),
+        },
+      ]}
+    >
       <View style={styles.header}>
-        <View><Text style={[styles.eyebrow, { color: cores.primary }]}>DEMANDAS DE DESENVOLVIMENTO</Text><Text style={[styles.title, { color: cores.text }]}>Issues</Text></View>
+        <View style={styles.headerCopy}>
+          <Text style={[styles.eyebrow, { color: cores.primary }]}>DEMANDAS DE DESENVOLVIMENTO</Text>
+          <Text style={[styles.title, { color: cores.text }]}>Issues</Text>
+        </View>
         <Filter size={21} color={cores.textSecondary} />
       </View>
-      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Acompanhe as issues atribuídas ao seu time.</Text>
+      <Text style={[styles.subtitle, { color: cores.textSecondary }]}>
+        Acompanhe as issues atribuídas ao seu time.
+      </Text>
 
       <View style={styles.filters}>
         {(Object.keys(statusLabels) as FilterType[]).map((option) => (
-          <Pressable key={option} onPress={() => setFilter(option)} style={[styles.filterButton, { backgroundColor: cores.surface, borderColor: cores.border }, filter === option && [styles.filterButtonActive, { backgroundColor: cores.primary, borderColor: cores.primary }]]}>
-            <Text style={[styles.filterText, { color: cores.textSecondary }, filter === option && [styles.filterTextActive, { color: cores.surface }]]}>{statusLabels[option]}</Text>
+          <Pressable
+            key={option}
+            onPress={() => setFilter(option)}
+            style={[
+              styles.filterButton,
+              { backgroundColor: cores.surface, borderColor: cores.border },
+              filter === option && [
+                styles.filterButtonActive,
+                { backgroundColor: cores.primary, borderColor: cores.primary },
+              ],
+            ]}
+          >
+            <Text
+              style={[
+                styles.filterText,
+                { color: cores.textSecondary },
+                filter === option && [styles.filterTextActive, { color: cores.surface }],
+              ]}
+            >
+              {statusLabels[option]}
+            </Text>
           </Pressable>
         ))}
       </View>
 
-      <Pressable style={[styles.newButton, { backgroundColor: cores.primary }]} onPress={() => router.push('/new-task')}>
-        <Plus size={18} color={cores.surface} /><Text style={[styles.newButtonText, { color: cores.surface }]}>Nova demanda</Text>
+      <Pressable
+        style={[styles.newButton, { backgroundColor: cores.primary }]}
+        onPress={() => router.push('/new-task')}
+      >
+        <Plus size={18} color={cores.surface} />
+        <Text style={[styles.newButtonText, { color: cores.surface }]}>Nova demanda</Text>
       </Pressable>
 
       <FlatList
         data={filteredTasks}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[
+          styles.list,
+          { paddingBottom: Math.max(insets.bottom, spacing.screenBottom) },
+        ]}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <Pressable style={({ pressed }) => [styles.issueCard, { backgroundColor: cores.surface, borderColor: cores.border }, pressed && styles.pressed]} onPress={() => router.push({ pathname: '/task-details/[id]' as never, params: { id: item.id } })}>
-            <View style={styles.issueHeader}><Text style={[styles.issueNumber, { color: cores.primary }]}>#{item.issue}</Text><Text style={[styles.project, { color: cores.textSecondary }]}>{item.projectKey}</Text><Text style={[styles.priority, { color: item.priority === 'alta' ? cores.danger : cores.textSecondary }]}>{item.priority}</Text></View>
-            <View style={styles.issueTitleRow}><CircleDot size={18} color={item.status === 'concluido' ? cores.success : cores.primary} /><Text style={[styles.issueTitle, { color: cores.text }]}>{item.title}</Text></View>
-            <Text style={[styles.description, { color: cores.textSecondary }]} numberOfLines={2}>{item.description}</Text>
-            <View style={[styles.issueFooter, { borderTopColor: cores.border }]}><Text style={[styles.assignee, { color: cores.text }]}>{item.assignee}</Text><Text style={[styles.dueDate, { color: cores.textSecondary }]}>Prazo {item.dueDate}</Text></View>
+          <Pressable
+            style={({ pressed }) => [
+              styles.issueCard,
+              { backgroundColor: cores.surface, borderColor: cores.border },
+              pressed && styles.pressed,
+            ]}
+            onPress={() =>
+              router.push({
+                pathname: '/task-details/[id]' as never,
+                params: { id: item.id },
+              })
+            }
+          >
+            <View style={styles.issueHeader}>
+              <Text style={[styles.issueNumber, { color: cores.primary }]}>#{item.issue}</Text>
+              <Text
+                style={[styles.project, { color: cores.textSecondary }]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.projectKey}
+              </Text>
+              <Text
+                style={[
+                  styles.priority,
+                  { color: item.priority === 'alta' ? cores.danger : cores.textSecondary },
+                ]}
+              >
+                {item.priority}
+              </Text>
+            </View>
+            <View style={styles.issueTitleRow}>
+              <CircleDot
+                size={18}
+                color={item.status === 'concluido' ? cores.success : cores.primary}
+              />
+              <Text
+                style={[styles.issueTitle, { color: cores.text }]}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {item.title}
+              </Text>
+            </View>
+            <Text
+              style={[styles.description, { color: cores.textSecondary }]}
+              numberOfLines={2}
+            >
+              {item.description}
+            </Text>
+            <View style={[styles.issueFooter, { borderTopColor: cores.border }]}>
+              <Text
+                style={[styles.assignee, { color: cores.text }]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.assignee}
+              </Text>
+              <Text style={[styles.dueDate, { color: cores.textSecondary }]}>
+                Prazo {item.dueDate}
+              </Text>
+            </View>
           </Pressable>
         )}
-        ListEmptyComponent={<Text style={styles.empty}>Nenhuma issue neste status.</Text>}
+        ListEmptyComponent={
+          <Text style={[styles.empty, { color: cores.textSecondary }]}>
+            Nenhuma issue neste status.
+          </Text>
+        }
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: spacing.screen, paddingTop: spacing.md },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  eyebrow: { color: colors.primary, fontSize: 10, fontWeight: '800', letterSpacing: 0.7 },
-  title: { color: colors.text, fontSize: 30, fontWeight: '800', marginTop: spacing.xs },
-  subtitle: { color: colors.textSecondary, fontSize: 14, marginTop: spacing.xs, marginBottom: spacing.md },
-  filters: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md },
-  filterButton: { paddingVertical: 7, paddingHorizontal: spacing.sm, borderRadius: 18, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
-  filterButtonActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  filterText: { color: colors.textSecondary, fontSize: 12, fontWeight: '700' },
-  filterTextActive: { color: colors.surface },
-  newButton: { flexDirection: 'row', gap: spacing.sm, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary, borderRadius: 11, padding: spacing.md, marginBottom: spacing.md },
-  newButtonText: { color: colors.surface, fontWeight: '800' },
-  list: { paddingBottom: spacing.screenBottom },
-  issueCard: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 13, padding: spacing.md, marginBottom: spacing.sm },
-  pressed: { opacity: 0.75 },
-  issueHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  issueNumber: { color: colors.primary, fontSize: 12, fontWeight: '800' },
-  project: { color: colors.textSecondary, fontSize: 11, fontWeight: '700', flex: 1 },
-  priority: { color: colors.textSecondary, fontSize: 11, fontWeight: '700', textTransform: 'capitalize' },
-  highPriority: { color: colors.danger },
-  issueTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.sm },
-  issueTitle: { color: colors.text, fontSize: 15, fontWeight: '800', flex: 1 },
-  description: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, marginTop: spacing.sm },
-  issueFooter: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: colors.border, marginTop: spacing.md, paddingTop: spacing.sm },
-  assignee: { color: colors.text, fontSize: 12, fontWeight: '600' },
-  dueDate: { color: colors.textSecondary, fontSize: 12 },
-  empty: { color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    paddingHorizontal: spacing.screen,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerCopy: {
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  eyebrow: {
+    color: colors.primary,
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.7,
+  },
+  title: {
+    color: colors.text,
+    fontSize: 30,
+    fontWeight: '800',
+    marginTop: spacing.xs,
+  },
+  subtitle: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    marginTop: spacing.xs,
+    marginBottom: spacing.md,
+  },
+  filters: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  filterButton: {
+    minHeight: 44,
+    paddingVertical: 8,
+    paddingHorizontal: spacing.md,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterButtonActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  filterText: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  filterTextActive: {
+    color: colors.surface,
+  },
+  newButton: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    minHeight: 48,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
+  },
+  newButtonText: {
+    color: colors.surface,
+    fontWeight: '800',
+    fontSize: 15,
+  },
+  list: {
+    paddingBottom: spacing.screenBottom,
+  },
+  issueCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  pressed: {
+    opacity: 0.75,
+  },
+  issueHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  issueNumber: {
+    color: colors.primary,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  project: {
+    color: colors.textSecondary,
+    fontSize: 12,
+    fontWeight: '700',
+    flex: 1,
+  },
+  priority: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
+  highPriority: {
+    color: colors.danger,
+  },
+  issueTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  issueTitle: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: '800',
+    flex: 1,
+  },
+  description: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: spacing.sm,
+  },
+  issueFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    marginTop: spacing.md,
+    paddingTop: spacing.sm,
+  },
+  assignee: {
+    color: colors.text,
+    fontSize: 12,
+    fontWeight: '600',
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  dueDate: {
+    color: colors.textSecondary,
+    fontSize: 12,
+  },
+  empty: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.xl,
+    fontSize: 15,
+  },
 });

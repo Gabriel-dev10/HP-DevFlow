@@ -28,9 +28,12 @@ export function Button({ title, onPress, icon = 'none' }: ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
-    padding: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    minHeight: 48,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   pressed: {
