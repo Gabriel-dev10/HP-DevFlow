@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFetch } from '../../../hooks/useFetch';
 import { api } from '../../../services/api';
+import { comCache } from '../../../services/cache';
 import { colors, spacing } from '../../../theme';
 import type { User } from '../../../types/api';
 import { useTheme } from '../../../data/theme-context';
@@ -16,7 +17,7 @@ export default function UserDetailScreen() {
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const buscarUsuario = useCallback(
-    () => api.user(id ?? ''),
+    () => comCache(`app:v1:cache:user:${id ?? ''}`, () => api.user(id ?? '')),
     [id],
   );
   const { dados, loading, erro, recarregar } = useFetch<User>(buscarUsuario);

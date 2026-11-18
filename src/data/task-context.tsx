@@ -1,7 +1,9 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 
 import { tasks as initialTasks } from './tasks';
 import { Task, TaskPriority, TaskStatus } from '../types/task';
+import { usePersistedState } from '../hooks/usePersistedState';
+import { STORAGE_KEYS } from '../services/storage';
 
 type NewTask = {
   title: string;
@@ -24,9 +26,12 @@ type TaskContextValue = {
 const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = usePersistedState<Task[]>(
+    STORAGE_KEYS.tasks,
+    initialTasks,
+  );
 
-  function addTask(task: NewTask) {
+  const addTask = useCallback((task: NewTask) => {
     setTasks((currentTasks) => [
       ...currentTasks,
       {
@@ -38,9 +43,9 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
         completed: false,
       },
     ]);
-  }
+  }, [setTasks]);
 
-  function updateStatus(taskId: string, status: TaskStatus) {
+  const updateStatus = useCallback((taskId: string, status: TaskStatus) => {
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
         task.id === taskId
@@ -48,9 +53,9 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
           : task,
       ),
     );
-  }
+  }, [setTasks]);
 
-  function toggleTask(taskId: string) {
+  const toggleTask = useCallback((taskId: string) => {
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
         task.id === taskId
@@ -58,7 +63,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
           : task,
       ),
     );
-  }
+  }, [setTasks]);
 
   const value = useMemo(
     () => ({
@@ -69,7 +74,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       getTask: (taskId: string) =>
         tasks.find((task) => task.id === taskId),
     }),
-    [tasks],
+    [addTask, tasks, toggleTask, updateStatus],
   );
 
   return (

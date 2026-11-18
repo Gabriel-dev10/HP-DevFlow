@@ -45,6 +45,23 @@ function Guarda({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function RootStack() {
+  const { cores } = useTheme();
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: cores.background },
+      }}
+    >
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(app)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+    </Stack>
+  );
+}
+
 export default function RootLayout() {
   return (
     <ThemeProvider>
@@ -52,12 +69,7 @@ export default function RootLayout() {
       <AuthProvider>
         <TaskProvider>
           <Guarda>
-            <Stack>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(app)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-            </Stack>
+            <RootStack />
           </Guarda>
         </TaskProvider>
       </AuthProvider>

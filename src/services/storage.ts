@@ -4,6 +4,7 @@ export const STORAGE_KEYS = {
   sessao: 'app:v1:sessao',
   tema: 'app:v1:tema',
   usersCache: 'app:v1:cache:users',
+  tasks: 'app:v1:tasks',
 };
 
 export async function get<T>(chave: string, padrao: T): Promise<T> {

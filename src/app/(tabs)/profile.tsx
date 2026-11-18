@@ -18,6 +18,14 @@ export default function ProfileScreen() {
     router.replace('/login' as Href);
   }
 
+  const iniciais = (usuario?.name ?? 'Gabriel Silva')
+    .split(' ')
+    .filter(Boolean)
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || 'US';
+
   return (
     <View
       style={[
@@ -41,7 +49,7 @@ export default function ProfileScreen() {
         <Text style={[styles.eyebrow, { color: cores.textSecondary }]}>CONTA</Text>
         <Text style={[styles.title, { color: cores.text }]}>Perfil</Text>
         <View style={[styles.avatar, { backgroundColor: cores.primary }]}>
-          <Text style={styles.avatarText}>GS</Text>
+          <Text style={[styles.avatarText, { color: cores.surface }]}>{iniciais}</Text>
         </View>
         <Text
           style={[styles.name, { color: cores.text }]}

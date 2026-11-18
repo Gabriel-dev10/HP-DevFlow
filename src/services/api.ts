@@ -1,6 +1,6 @@
 import type { User } from '../types/api';
 
-const BASE = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '') ?? '';
+const BASE = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://jsonplaceholder.typicode.com';
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   if (!BASE) {

@@ -10,11 +10,12 @@ export function usePersistedState<T>(
   const [pronto, setPronto] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hidratado = useRef(false);
+  const inicialRef = useRef(inicial);
 
   useEffect(() => {
     let ativo = true;
 
-    void get(chave, inicial).then((salvo) => {
+    void get(chave, inicialRef.current).then((salvo) => {
       if (ativo) {
         setValor(salvo);
         hidratado.current = true;
@@ -25,7 +26,7 @@ export function usePersistedState<T>(
     return () => {
       ativo = false;
     };
-  }, [chave, inicial]);
+  }, [chave]);
 
   useEffect(() => {
     if (!pronto || !hidratado.current) {
@@ -36,9 +37,13 @@ export function usePersistedState<T>(
       clearTimeout(timeout.current);
     }
 
-    timeout.current = setTimeout(() => {
+    if (debounceMs > 0) {
+      timeout.current = setTimeout(() => {
+        void set(chave, valor);
+      }, debounceMs);
+    } else {
       void set(chave, valor);
-    }, debounceMs);
+    }
 
     return () => {
       if (timeout.current) {

@@ -46,6 +46,7 @@ export default function HomeScreen() {
           },
         ]}
       >
+        {!online && <OfflineBanner />}
         <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );

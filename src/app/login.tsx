@@ -110,7 +110,7 @@ export default function LoginScreen() {
             <Pressable
               style={[
                 styles.button,
-                { backgroundColor: cores.primaryDark },
+                { backgroundColor: cores.primary },
                 carregando && styles.buttonDisabled,
               ]}
               onPress={() => void handleLogin()}
@@ -119,7 +119,7 @@ export default function LoginScreen() {
               {carregando ? (
                 <ActivityIndicator color={cores.surface} />
               ) : (
-                <Text style={styles.buttonText}>Entrar</Text>
+                <Text style={[styles.buttonText, { color: cores.surface }]}>Entrar</Text>
               )}
             </Pressable>
           </View>
