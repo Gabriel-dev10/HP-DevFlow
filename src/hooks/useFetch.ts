@@ -41,7 +41,9 @@ export function useFetch<T>(buscar: () => Promise<T>): UseFetchResult<T> {
   }, [buscar]);
 
   useEffect(() => {
-    void recarregar();
+    queueMicrotask(() => {
+      void recarregar();
+    });
   }, [recarregar]);
 
   return { dados, loading, erro, recarregar };

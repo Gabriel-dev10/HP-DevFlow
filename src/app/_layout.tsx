@@ -3,10 +3,9 @@ import type { Href } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-import { AuthProvider } from '../data/auth-context';
+import { AuthProvider, useAuth } from '../data/auth-context';
 import { TaskProvider } from '../data/task-context';
 import { ThemeProvider, useTheme } from '../data/theme-context';
-import { useAuth } from '../data/auth-context';
 
 void SplashScreen.preventAutoHideAsync();
 
