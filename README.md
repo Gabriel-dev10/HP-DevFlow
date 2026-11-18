@@ -1,190 +1,214 @@
-# StudyFlow (HP DevFlow) — Aplicativo Híbrido
+# StudyFlow ⚡ HP DevFlow
 
-Aplicativo mobile em **React Native com Expo** voltado para o acompanhamento de atividades, projetos e demandas técnicas de desenvolvimento de software. A lista de membros do time é consumida de uma API pública externa (**JSONPlaceholder**) com camada inteligente de cache offline, enquanto a gestão de demandas, preferências e sessão são persistidas localmente de forma segura.
-
-> **Trabalho da disciplina de Aplicativos Híbridos (Univassouras).**
+> **Hub mobile para gestão ágil de demandas e acompanhamento técnico de equipes de engenharia.**  
+> Projeto prático desenvolvido para a disciplina de **Aplicativos Híbridos — Univassouras**.
 
 ---
 
-## Como executar
+## 💡 Sobre o Projeto
 
-### Pré-requisitos
-- Node.js (versão 20 ou superior)
-- npm ou yarn
-- Aplicativo **Expo Go** instalado no celular físico (Android ou iOS) ou emulador/simulador configurado
+O **StudyFlow (HP DevFlow)** é um aplicativo mobile multiplataforma (iOS, Android e Web) construído com **React Native** e **Expo (SDK 57)**. Inspirado no ecossistema de ferramentas como GitLab e Jira, o app resolve a necessidade de acompanhamento ágil de issues, ciclo de entrega de software (Backlog ➔ Dev ➔ Revisão ➔ Concluído) e alocação de desenvolvedores.
 
-### 1. Instalação das dependências
+O app combina dados de catálogo de membros vindos da API REST pública **JSONPlaceholder** com um motor local de persistência, cache com tolerância a falhas e tematização dinâmica, assegurando que o desenvolvedor continue produtivo mesmo em ambientes de baixa ou nenhuma conectividade.
+
+---
+
+## 🛠️ Stack Tecnológica
+
+- **Core:** React 19, React Native 0.86, TypeScript 6
+- **Framework & Roteamento:** Expo SDK 57, Expo Router (navegação declarativa e file-based)
+- **Persistência Segura:** `expo-secure-store` (Criptografia Keychain/Keystore)
+- **Persistência de Dados:** `@react-native-async-storage/async-storage` com Generics tipados
+- **Conectividade:** `@react-native-community/netinfo`
+- **Iconografia:** `lucide-react-native`
+- **Interface & Layout:** `react-native-safe-area-context` e design tokens proprietários
+- **Qualidade de Código:** Suíte própria de testes automatizados (`node --test`), TypeScript Compiler (`tsc`) e ESLint
+
+---
+
+## 🚀 Guia Rápido de Inicialização
+
+### Passo a Passo
+
 ```bash
+# 1. Clone o repositório e acesse a pasta
+cd StudyFlow/StudyFlow
+
+# 2. Instale os pacotes necessários
 npm install
-```
 
-### 2. Inicialização do aplicativo
-```bash
+# 3. Inicie o servidor de desenvolvimento Expo
 npx expo start
 ```
-- **No celular físico:** Abra o app Expo Go e leia o código QR exibido no terminal. (Se os aparelhos estiverem em redes isoladas, use `npx expo start --tunnel`).
-- **No emulador Android:** Pressione `a` no terminal.
-- **No simulador iOS:** Pressione `i` no terminal.
-- **No navegador (Web):** Pressione `w` no terminal ou execute `npx expo start --web`.
 
-### 3. Credenciais de demonstração
-Para acessar o aplicativo na tela de login, você pode usar qualquer e-mail e senha válidos:
+### Como Visualizar o App
+- **No Celular Físico:** Abra o aplicativo **Expo Go** e escaneie o QR Code exibido no terminal. Caso esteja em redes Wi-Fi públicas ou com isolamento de clientes, inicie com `npx expo start --tunnel`.
+- **No Emulador Android:** Pressione a tecla `a`.
+- **No Simulador iOS:** Pressione a tecla `i`.
+- **No Navegador Web:** Pressione a tecla `w` ou execute `npx expo start --web`.
 
-| Campo | Valor de Demonstração |
-| :--- | :--- |
-| **E-mail** | `gabriel.silva@hp.dev` (ou qualquer e-mail válido com `@`) |
-| **Senha** | Qualquer senha (ex.: `123456`) |
+### Acesso de Demonstração
+A tela de login conta com validação de formato e aceita qualquer e-mail com domínio corporativo ou pessoal para testes:
+- **E-mail sugerido:** `gabriel.silva@hp.dev`
+- **Senha:** `123456`
 
-### 4. Execução dos testes automatizados
-O projeto conta com uma suíte de testes de integração automatizados cobrindo os cenários de auditoria da disciplina (offline, cache, persistência, logout, responsividade e acessibilidade):
+---
+
+## 🧪 Suíte de Testes Automatizados
+
+Para certificar todos os fluxos críticos de negócio, persistência e resiliência offline, o projeto conta com uma suíte de testes de integração executável diretamente via Node:
+
 ```bash
+# Executa os 15 testes de integração automatizados
 npm test
-```
 
-Para validação estática de tipagem e formatação:
-```bash
+# Valida tipagens estáticas em todo o projeto
 npx tsc --noEmit
+
+# Analisa boas práticas e regras de linter
 npx eslint .
 ```
 
 ---
 
-## Arquitetura do Aplicativo
+## 🏛️ Fluxo e Engenharia da Solução
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       DISPOSITIVO MÓVEL (EXPO / REACT NATIVE)               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  Telas & Rotas (Expo Router v57)                                            │
-│  ├── Login & Splash Guard (_layout.tsx)                                     │
-│  ├── Abas: Dashboard / Issues / Projetos / Estatísticas / Perfil            │
-│  └── Pilha Interna: Detalhes do Usuário / Detalhes da Issue / Nova Demanda  │
-├──────────────────────────────────────┬──────────────────────────────────────┤
-│  Estado Global & Contextos           │  Hooks Especializados                │
-│  ├── AuthContext (Sessão & Logout)   │  ├── useFetch (Loading/Erro/Dados)   │
-│  ├── ThemeContext (Claro / Escuro)   │  ├── useOnline (NetInfo Listener)    │
-│  └── TaskContext (Demandas Kanban)   │  └── usePersistedState (AsyncSync)   │
-├──────────────────────────────────────┴──────────────────────────────────────┤
-│  Camada de Serviços & Armazenamento                                         │
-│  ├── api.ts          ──► Cliente HTTP REST (JSONPlaceholder)                │
-│  ├── cache.ts        ──► Cache com TTL (5 min) e Fallback Stale-While-Error │
-│  ├── storage.ts      ──► AsyncStorage Tipado (Generics + Fallback Seguro)   │
-│  └── seguro.ts       ──► SecureStore Criptografado (Keychain / Keystore)    │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                       │
-                                       ▼ HTTPS / JSON
-                     ┌───────────────────────────────────┐
-                     │ API JSONPlaceholder               │
-                     │ (https://jsonplaceholder.typicode.com)
-                     └───────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph UI ["Camada Visual (Expo Router)"]
+        A["Autenticação & Splash Guard"] --> B["Navegação por Abas (Tabs)"]
+        B --> C["Demandas (Issues)"]
+        B --> D["Projetos & Métricas"]
+        B --> E["Time Técnico (API Externa)"]
+        B --> F["Perfil & Tema"]
+    end
+
+    subgraph State ["Estado & Hooks Reativos"]
+        G["AuthContext"]
+        H["ThemeContext"]
+        I["TaskContext"]
+        J["useFetch & useOnline"]
+        K["usePersistedState"]
+    end
+
+    subgraph LocalStorage ["Camada de Persistência Local"]
+        L[("SecureStore\nTokens Criptografados")]
+        M[("AsyncStorage Wrapper\nSessão, Tema & Tarefas")]
+        N[("Cache Storage\nTTL 5 min + Fallback Offline")]
+    end
+
+    subgraph Remote ["Serviços Externos"]
+        O["JSONPlaceholder API\n/users e /users/:id"]
+    end
+
+    UI <--> State
+    G <--> L
+    G <--> M
+    H <--> M
+    I <--> M
+    K <--> M
+    J <--> N
+    N <-->|HTTPS / REST| O
 ```
 
 ---
 
-## Telas do Aplicativo
+## 📱 Domínios Funcionais e Mapeamento de Telas
 
-| Rota | Arquivo | Descrição e Funcionalidade |
-| :--- | :--- | :--- |
-| `/login` | `src/app/login.tsx` | Autenticação com validação de campos, teclado adaptativo e feedback de erro |
-| `/` | `src/app/index.tsx` | Redirecionador inteligente baseado no estado da sessão |
-| `/(tabs)` | `src/app/(tabs)/index.tsx` | **Dashboard / Usuários:** Lista de usuários da equipe vinda da API, com pull-to-refresh, 4 estados e banner offline |
-| `/(tabs)/tasks` | `src/app/(tabs)/tasks.tsx` | **Issues:** Demandas de desenvolvimento com filtros de fluxo (Backlog, Em dev, Revisão, Concluído) |
-| `/(tabs)/calendar` | `src/app/(tabs)/calendar.tsx` | **Projetos:** Visão consolidada por projeto, métricas de conclusão e barras de progresso |
-| `/(tabs)/statistics` | `src/app/(tabs)/statistics.tsx` | **Estatísticas:** Taxa de entrega, cartões de métricas responsivos e histórico de alterações |
-| `/(tabs)/profile` | `src/app/(tabs)/profile.tsx` | **Perfil:** Dados da conta, avatar dinâmico com iniciais, alternador de modo escuro e botão de saída |
-| `/user/[id]` | `src/app/(app)/user/[id].tsx` | **Detalhes do Usuário:** Nome, e-mail e cidade do membro da equipe, com suporte a cache offline |
-| `/new-task` | `src/app/new-task.tsx` | **Nova Demanda:** Formulário de criação de issue com teclado adaptativo e seleção de prioridade |
-| `/task-details/[id]` | `src/app/task-details.tsx` | **Detalhes da Issue:** Descrição técnica, alteração de status do fluxo, responsável e link GitLab simulado |
+Em vez de menus estáticos, o StudyFlow organiza a experiência do desenvolvedor em cinco domínios principais:
 
----
+### 1. Autenticação, Proteção e Inicialização
+- **`src/app/_layout.tsx` (Guarda Central):** Segura a Splash Screen nativa via `SplashScreen.preventAutoHideAsync()` até que tema e sessão sejam carregados simultaneamente do disco. Redireciona usuários sem sessão ativa para `/login` e bloqueia o retorno ao login se já autenticado.
+- **`src/app/login.tsx` (`/login`):** Tela de login com validações de regex, controle de foco, teclado com scroll adaptativo (`KeyboardAvoidingView`) e área de toque acessível.
 
-## Navegação (Expo Router)
+### 2. Time Técnico & Consumo de API Externa
+- **`src/app/(tabs)/index.tsx` (`/(tabs)`):** Lista da equipe técnica consumida da API com 4 estados bem definidos (Carregando, Erro com retry, Lista Vazia e Sucesso), suporte a pull-to-refresh e banner de aviso quando desconectado.
+- **`src/app/(app)/user/[id].tsx` (`/user/[id]`):** Detalhamento do membro da equipe técnica (nome, e-mail e cidade), com suporte a cache local prévio em caso de consulta offline.
 
-- **Pilha Raiz (`app/_layout.tsx`):**
-  - Mantém a Splash Screen ativa (`SplashScreen.preventAutoHideAsync()`) até que tema e sessão estejam completamente hidratados.
-  - O componente `Guarda` protege a navegação: se o usuário não estiver autenticado, força o redirecionamento para `/login`. Se já estiver logado, impede a abertura da tela de login redirecionando para a área principal.
-  - Elimina flashes de tela branca com `contentStyle: { backgroundColor: cores.background }`.
-- **Layout de Abas (`(tabs)/_layout.tsx`):**
-  - Gerencia as 5 seções principais com ícones temáticos (`lucide-react-native`).
-  - Barra de abas com cores ativas e inativas sincronizadas com o tema corrente.
-- **Pilha de Telas Internas (`(app)/_layout.tsx`):**
-  - Cabeçalhos nativos adaptados dinamicamente com as cores de superfície e texto do tema.
+### 3. Gestão de Demandas (Issues) & Ciclo de Vida
+- **`src/app/(tabs)/tasks.tsx` (`/(tabs)/tasks`):** Listagem de issues com filtros segmentados por status (`Todas`, `Backlog`, `Em dev`, `Revisão`, `Concluídas`).
+- **`src/app/new-task.tsx` (`/new-task`):** Formulário de abertura de novas demandas técnicas com seletor de prioridade (Baixa, Média, Alta), cálculo automático de sigla do projeto e persistência no storage local.
+- **`src/app/task-details.tsx` (`/task-details/[id]`):** Painel da issue com transição ágil de status, prazos, responsável e link de rastreamento com GitLab.
+
+### 4. Inteligência de Entrega & Projetos
+- **`src/app/(tabs)/calendar.tsx` (`/(tabs)/calendar`):** Agrupamento inteligente de demandas por projeto, exibindo barras de conclusão percentuais e contagem de issues pendentes vs concluídas.
+- **`src/app/(tabs)/statistics.tsx` (`/(tabs)/statistics`):** Dashboard executivo com indicador geral de conclusão, métricas em cards responsivos e feed cronológico das últimas alterações.
+
+### 5. Configurações, Identidade & Tema
+- **`src/app/(tabs)/profile.tsx` (`/(tabs)/profile`):** Cartão de perfil com iniciais dinâmicas, resumo de ciclo, switch de alternância de Tema Claro / Escuro e ação de logout com limpeza total.
 
 ---
 
-## APIs Consumidas e Resiliência de Rede
+## 🛡️ Pilares Técnicos da Aplicação
 
-| API / Serviço | Tipo | Finalidade |
-| :--- | :--- | :--- |
-| **JSONPlaceholder** (`/users`, `/users/:id`) | REST / JSON | Catálogo de membros da equipe e desenvolvedores associados |
-| **NetInfo** (`@react-native-community/netinfo`) | Event Listener Nativo | Detecção em tempo real do estado da conexão à internet |
+### 1. Estratégia de Rede e Modo Offline-First
+* **Cache com Validade Temporal (TTL de 5 minutos):** Toda requisição bem-sucedida ao catálogo de usuários é guardada com carimbo de data/hora (`salvoEm`). Requisições seguintes dentro de 5 minutos são resolvidas a partir do disco, economizando dados e bateria.
+* **Resiliência a Falhas (*Stale-While-Error*):** Caso o aparelho perca sinal ou entre em Modo Avião, o app captura a falha de rede e apresenta os últimos dados em cache, mesmo que vencidos, acompanhados pelo banner `"Você está offline"`.
+* **Reconexão Transparente:** O hook `useOnline` escuta eventos do `NetInfo`. Ao restabelecer a conexão, o sistema dispara autonomamente a atualização dos dados sem forçar recarregamento manual pelo usuário.
 
-### Estratégia Offline-First:
-1. **Cache com TTL (5 minutos):** Toda requisição à lista de usuários grava o payload e o timestamp de gravação no `AsyncStorage`. Requisições subsequentes dentro da janela de 5 minutos são resolvidas instantaneamente sem tráfego de rede.
-2. **Fallback Gracioso (Modo Avião):** Se a requisição de rede falhar (ex.: sem sinal ou modo avião ativado), o app recupera e exibe a última resposta válida do cache, mesmo que expirada.
-3. **Banner "Você está offline":** Exibido de forma destacada e acessível quando a conexão é perdida.
-4. **Reconexão Autônoma:** Ao detectar o retorno da conectividade através do hook `useOnline`, a tela de usuários atualiza seus dados automaticamente sem exigir ação do usuário.
+### 2. Armazenamento Seguro vs Armazenamento Geral
+* **Cofre Seguro (`services/seguro.ts`):** O token de sessão é isolado no hardware seguro do dispositivo (`expo-secure-store` via iOS Keychain e Android Keystore). O acesso é bloqueado em ambiente web para evitar exposição a ataques de XSS no `localStorage`.
+* **AsyncStorage com Wrapper Tipado (`services/storage.ts`):** O acesso a preferências de tema, sessão e demandas é realizado através de funções genéricas `get<T>` e `set<T>`. Qualquer corrupção ou JSON inválido em disco é capturado por `try/catch` e substituído pelo valor padrão, impedindo *white screens* de travamento.
+* **Sincronização Reativa com `usePersistedState`:** Permite que qualquer alteração de estado no React seja refletida e gravada de forma síncrona no armazenamento permanente.
 
----
+### 3. Tematização Imersiva (Dark & Light Mode)
+* O tema escolhido pelo usuário é persistido e preservado entre aberturas do app.
+* Todos os elementos visuais (StatusBar, navegação de abas, cabeçalhos do Stack nativo, cartões, formulários e textos) recalculam dinamicamente suas cores com base no token ativo (`cores.background`, `cores.surface`, `cores.primary`, `cores.text`, etc.).
+* O background raiz impede qualquer efeito de "flash branco" durante a transição de telas no modo escuro.
 
-## Armazenamento Local e Segurança
-
-| Onde | Mecanismo | O que é armazenado |
-| :--- | :--- | :--- |
-| **Cofre Seguro** | `expo-secure-store` (`services/seguro.ts`) | Token de sessão (`app_v1_token`) criptografado no Keychain (iOS) ou Keystore (Android). Desabilitado em web para prevenir vulnerabilidades de LocalStorage. |
-| **Armazenamento Local** | `AsyncStorage` (`services/storage.ts`) | Objeto do usuário logado (`app:v1:sessao`), preferência de tema (`app:v1:tema`), lista de demandas (`app:v1:tasks`) e cache de requisições (`app:v1:cache:users`). |
-
-### Características de Segurança e Robustez:
-- **Wrapper Tipado Genérico:** O módulo `storage.ts` expõe métodos genéricos `get<T>` e `set<T>`, garantindo type-safety em tempo de compilação.
-- **Tratamento de Dados Corrompidos:** Se o conteúdo no armazenamento local for adulterado ou apresentar JSON inválido, o wrapper captura o erro silenciosamente via `try/catch` e retorna o valor padrão sem travar a aplicação.
-- **Logout Seguro e Atômico:** Ao sair da conta, o método `sair()` limpa simultaneamente a sessão, o token do cofre seguro e o cache de dados em disco.
+### 4. Responsividade e Padrões de Interface Mobile
+* **Safe Area Insets:** Uso consistente de `useSafeAreaInsets` em todas as telas, evitando colisões com entalhes (*notch*), Dynamic Island e barra de gestos inferior.
+* **Prevenção de Oclusão por Teclado:** Uso de `KeyboardAvoidingView` associado a `ScrollView` configurado com `keyboardShouldPersistTaps="handled"`.
+* **Alvos de Toque Acessíveis:** Todos os botões, opções de filtro e seletores possuem altura mínima de **44pt a 48pt**, atendendo às normas de usabilidade da Apple (HIG) e Google (Material Design).
+* **Orientação Paisagem & Aparelhos Compactos:** Nenhuma tela possui altura ou largura rígida que cause cortes; o contêiner interno com `flexGrow: 1` viabiliza a rolagem fluida em qualquer proporção de tela.
 
 ---
 
-## Responsividade Mobile e Acessibilidade
-
-Todas as telas do aplicativo foram auditadas e adequadas às diretrizes de interface mobile (Apple HIG e Android Material):
-
-- **Safe Area Insets:** Todas as telas utilizam o hook `useSafeAreaInsets` (`react-native-safe-area-context`) para respeitar entalhes (*notch*), barra de status superior e barra de gestos inferior (*home indicator*).
-- **Tratamento de Teclado:** Os formulários (`login.tsx` e `new-task.tsx`) utilizam `KeyboardAvoidingView` com ajuste por plataforma (`padding` no iOS) e contêineres `ScrollView` com `keyboardShouldPersistTaps="handled"`, evitando que o teclado sobreponha campos ou bloqueie toques.
-- **Rolagem e Orientação Paisagem:** Telas de conteúdo extenso utilizam `ScrollView` com `flexGrow: 1`, garantindo que nenhum botão ou texto seja truncado quando o aparelho for rotacionado para o modo horizontal ou utilizado em telas compactas (ex.: 360x640).
-- **Alvos de Toque (≥44pt):** Botões de ação, filtros de status, opções de fluxo e botões de repetição respeitam o tamanho mínimo de toque de 44x44pt.
-- **Escala de Fonte:** Textos dinâmicos sensíveis a tamanhos grandes contam com `numberOfLines` e `ellipsizeMode="tail"`.
-
----
-
-## Organização do Código
+## 📁 Estrutura de Pastas do Projeto
 
 ```text
 StudyFlow/
-├── assets/                     # Ícones, splash screens e imagens
+├── assets/                  # Ícones, splash e identidades visuais
 ├── scripts/
-│   ├── run-audit-tests.js      # Suíte de testes automatizados de auditoria
-│   └── reset-project.js        # Script de inicialização padrão do template
+│   ├── run-audit-tests.js   # Suíte de testes de integração automatizada
+│   └── reset-project.js     # Script auxiliar de setup
 ├── src/
-│   ├── app/                    # Rotas da aplicação (Expo Router)
-│   │   ├── (app)/              # Grupo de telas autenticadas e pilha interna
-│   │   │   ├── user/[id].tsx   # Detalhes do usuário
-│   │   │   └── _layout.tsx     # Pilha temática interna
-│   │   ├── (auth)/             # Redirecionamento de autenticação
-│   │   ├── (tabs)/             # Navegação por abas principais
-│   │   │   ├── index.tsx       # Dashboard / Usuários (API + Cache)
-│   │   │   ├── tasks.tsx       # Issues (Filtros de desenvolvimento)
-│   │   │   ├── calendar.tsx    # Projetos e progresso
-│   │   │   ├── statistics.tsx  # Estatísticas e histórico
-│   │   │   ├── profile.tsx     # Perfil e modo escuro
-│   │   │   └── _layout.tsx     # Configuração da barra de abas
-│   │   ├── _layout.tsx         # Layout raiz (Splash, Theme & Auth Guard)
-│   │   ├── login.tsx           # Tela de autenticação
-│   │   ├── new-task.tsx        # Criação de demanda
-│   │   └── task-details.tsx    # Detalhes da demanda
-│   ├── components/             # Componentes reutilizáveis (Button, OfflineBanner)
-│   ├── data/                   # Contextos de estado (Auth, Theme, Tasks)
-│   ├── hooks/                  # Hooks customizados (useFetch, useOnline, usePersistedState)
-│   ├── services/               # Clientes de API, Cache, SecureStore e Storage
-│   ├── theme/                  # Tokens de cores (claro/escuro) e espaçamentos
-│   └── types/                  # Definições de tipos TypeScript
-├── package.json                # Dependências e scripts do projeto
-├── tsconfig.json               # Configurações do TypeScript
-└── app.json                    # Configurações do Expo
+│   ├── app/                 # Arquitetura de rotas (Expo Router)
+│   │   ├── (app)/           # Telas com pilha temática interna
+│   │   ├── (auth)/          # Telas e redirecionadores de autenticação
+│   │   ├── (tabs)/          # As 5 abas principais do sistema
+│   │   ├── _layout.tsx      # Layout mestre, Splash e Guarda de segurança
+│   │   ├── login.tsx        # Portal de acesso
+│   │   ├── new-task.tsx     # Criação de demanda
+│   │   └── task-details.tsx # Detalhamento de issue
+│   ├── components/          # Componentes de interface (Button, OfflineBanner)
+│   ├── data/                # Contextos globais (AuthContext, ThemeContext, TaskContext)
+│   ├── hooks/               # Hooks customizados (useFetch, useOnline, usePersistedState)
+│   ├── services/            # Serviços (api.ts, cache.ts, seguro.ts, storage.ts)
+│   ├── theme/               # Tokens de cores (light/dark) e espaçamentos
+│   └── types/               # Modelos e interfaces TypeScript
+├── package.json             # Dependências e scripts de execução
+├── tsconfig.json            # Configurações do compilador TypeScript
+└── app.json                 # Metadados e plugins do Expo
 ```
+
+---
+
+## 📋 Resumo de Requisitos Atendidos da Disciplina
+
+| Requisito Avaliado | Implementação no StudyFlow | Evidência no Código |
+| :--- | :--- | :--- |
+| **API Dedicada** | Requisições encapsuladas em módulo de serviço | `src/services/api.ts` |
+| **4 Estados de Tela** | Loading, Erro c/ Retry, Lista Vazia e Sucesso | `src/app/(tabs)/index.tsx` |
+| **Pull-to-Refresh** | Atualização nativa via gesto de puxar | `FlatList refreshing + onRefresh` |
+| **Wrapper AsyncStorage** | Wrapper com TypeScript Generics e try/catch | `src/services/storage.ts` |
+| **Hook usePersistedState** | Sincronização automática com armazenamento local | `src/hooks/usePersistedState.ts` |
+| **Tema Claro e Escuro** | Alternância no perfil e persistência entre aberturas | `src/data/theme-context.tsx` |
+| **Splash Screen Retida** | Bloqueio de auto-hide até carregamento de tema e sessão | `src/app/_layout.tsx` |
+| **Sessão & SecureStore** | Token isolado no cofre do sistema (não-web) | `src/services/seguro.ts` |
+| **Cache com TTL (5 min)** | Carimbo de data/hora e reaproveitamento | `src/services/cache.ts` |
+| **Tolerância Offline** | Exibição de cache antigo quando API falha | `comCache` em `src/services/cache.ts` |
+| **Banner Offline** | Alerta visual imediato ao perder conexão | `src/components/OfflineBanner.tsx` |
+| **Reconexão Autônoma** | Atualização automática ao restaurar conectividade | Listener em `src/app/(tabs)/index.tsx` |
+| **Responsividade Total** | Safe Area, KeyboardAvoidingView e alvos ≥44pt | Presente em todas as 9 telas |
+| **Testes Automatizados** | Suíte cobrindo todos os cenários práticos | `npm test` (`run-audit-tests.js`) |
