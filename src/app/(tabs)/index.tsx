@@ -7,13 +7,14 @@ import { useFetch } from '../../hooks/useFetch';
 import { useOnline } from '../../hooks/useOnline';
 import { api } from '../../services/api';
 import { comCache } from '../../services/cache';
+import { STORAGE_KEYS } from '../../services/storage';
 import { colors, spacing } from '../../theme';
 import type { User } from '../../types/api';
 
 export default function HomeScreen() {
   const router = useRouter();
   const buscarUsers = useCallback(
-    () => comCache('app:v1:cache:users', api.users),
+    () => comCache(STORAGE_KEYS.usersCache, api.users),
     [],
   );
   const { dados, loading, erro, recarregar } = useFetch<User[]>(buscarUsers);
