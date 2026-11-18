@@ -7,8 +7,8 @@ export default function LegacyHomeRedirect() {
   const { usuario } = useAuth();
 
   if (!usuario) {
-    return <Redirect href={'/(auth)' as Href} />;
+    return <Redirect href={'/login' as Href} />;
   }
 
-  return <Redirect href={'/(app)' as Href} />;
+  return <Redirect href={'/(tabs)' as Href} />;
 }
