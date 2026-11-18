@@ -14,8 +14,10 @@ import { colors, spacing } from '../theme';
 import { TaskPriority } from '../types/task';
 import { useRouter } from 'expo-router';
 import { AlignLeft, CalendarDays, Flag } from 'lucide-react-native';
+import { useTheme } from '../data/theme-context';
 
 export default function NewTaskScreen() {
+  const { cores } = useTheme();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('22/09/2026');
@@ -44,69 +46,69 @@ export default function NewTaskScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.eyebrow}>CRIAR</Text>
-      <Text style={styles.title}>Nova demanda</Text>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
+      <Text style={[styles.eyebrow, { color: cores.primary }]}>CRIAR</Text>
+      <Text style={[styles.title, { color: cores.text }]}>Nova demanda</Text>
 
-      <View style={styles.labelRow}><AlignLeft size={16} color={colors.textSecondary} /><Text style={styles.label}>Título</Text></View>
+      <View style={styles.labelRow}><AlignLeft size={16} color={cores.textSecondary} /><Text style={[styles.label, { color: cores.text }]}>Título</Text></View>
 
       <TextInput
         value={title}
         onChangeText={setTitle}
         placeholder="Ex.: Corrigir validação do formulário"
-        placeholderTextColor={colors.textSecondary}
-        style={styles.input}
+        placeholderTextColor={cores.textSecondary}
+        style={[styles.input, { backgroundColor: cores.surface, borderColor: cores.border, color: cores.text }]}
       />
 
-      <View style={styles.labelRow}><AlignLeft size={16} color={colors.textSecondary} /><Text style={styles.label}>Descrição</Text></View>
+      <View style={styles.labelRow}><AlignLeft size={16} color={cores.textSecondary} /><Text style={[styles.label, { color: cores.text }]}>Descrição</Text></View>
 
       <TextInput
         value={description}
         onChangeText={setDescription}
         placeholder="Descreva a demanda técnica"
-        placeholderTextColor={colors.textSecondary}
+        placeholderTextColor={cores.textSecondary}
         multiline
-        style={[styles.input, styles.textArea]}
+        style={[styles.input, styles.textArea, { backgroundColor: cores.surface, borderColor: cores.border, color: cores.text }]}
       />
 
-      <View style={styles.labelRow}><CalendarDays size={16} color={colors.textSecondary} /><Text style={styles.label}>Data</Text></View>
+      <View style={styles.labelRow}><CalendarDays size={16} color={cores.textSecondary} /><Text style={[styles.label, { color: cores.text }]}>Data</Text></View>
 
       <TextInput
         value={date}
         onChangeText={setDate}
         placeholder="Ex.: 25/09/2026"
-        placeholderTextColor={colors.textSecondary}
-        style={styles.input}
+        placeholderTextColor={cores.textSecondary}
+        style={[styles.input, { backgroundColor: cores.surface, borderColor: cores.border, color: cores.text }]}
       />
 
-      <Text style={styles.label}>Projeto</Text>
+      <Text style={[styles.label, { color: cores.text }]}>Projeto</Text>
       <TextInput
         value={project}
         onChangeText={setProject}
         placeholder="Ex.: Sistema Interno HP"
-        placeholderTextColor={colors.textSecondary}
-        style={styles.input}
+        placeholderTextColor={cores.textSecondary}
+        style={[styles.input, { backgroundColor: cores.surface, borderColor: cores.border, color: cores.text }]}
       />
 
-      <Text style={styles.label}>Responsável</Text>
+      <Text style={[styles.label, { color: cores.text }]}>Responsável</Text>
       <TextInput
         value={assignee}
         onChangeText={setAssignee}
         placeholder="Ex.: Gabriel Silva"
-        placeholderTextColor={colors.textSecondary}
-        style={styles.input}
+        placeholderTextColor={cores.textSecondary}
+        style={[styles.input, { backgroundColor: cores.surface, borderColor: cores.border, color: cores.text }]}
       />
 
-      <View style={styles.labelRow}><Flag size={16} color={colors.textSecondary} /><Text style={styles.label}>Prioridade</Text></View>
+      <View style={styles.labelRow}><Flag size={16} color={cores.textSecondary} /><Text style={[styles.label, { color: cores.text }]}>Prioridade</Text></View>
 
       <View style={styles.priorityRow}>
         {(['baixa', 'media', 'alta'] as TaskPriority[]).map((option) => (
           <Pressable
             key={option}
             onPress={() => setPriority(option)}
-            style={[styles.priorityButton, priority === option && styles.priorityButtonActive]}
+            style={[styles.priorityButton, { backgroundColor: cores.surface, borderColor: cores.border }, priority === option && { backgroundColor: cores.primary, borderColor: cores.primary }]}
           >
-            <Text style={[styles.priorityText, priority === option && styles.priorityTextActive]}>
+            <Text style={[styles.priorityText, { color: cores.textSecondary }, priority === option && { color: cores.surface }]}>
               {option}
             </Text>
           </Pressable>

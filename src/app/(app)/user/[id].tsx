@@ -6,8 +6,10 @@ import { useFetch } from '../../../hooks/useFetch';
 import { api } from '../../../services/api';
 import { colors, spacing } from '../../../theme';
 import type { User } from '../../../types/api';
+import { useTheme } from '../../../data/theme-context';
 
 export default function UserDetailScreen() {
+  const { cores } = useTheme();
   const params = useLocalSearchParams<{ id: string }>();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
@@ -18,15 +20,15 @@ export default function UserDetailScreen() {
   const { dados, loading, erro, recarregar } = useFetch<User>(buscarUsuario);
 
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>;
+    return <View style={[styles.center, { backgroundColor: cores.background }]}><ActivityIndicator size="large" color={cores.primary} /></View>;
   }
 
   if (erro) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: cores.background }]}>
         <Text style={styles.error}>{erro}</Text>
-        <Pressable style={styles.retry} onPress={() => void recarregar()}>
-          <Text style={styles.retryText}>Tentar de novo</Text>
+        <Pressable style={[styles.retry, { backgroundColor: cores.primary }]} onPress={() => void recarregar()}>
+          <Text style={[styles.retryText, { color: cores.surface }]}>Tentar de novo</Text>
         </Pressable>
       </View>
     );
@@ -37,12 +39,12 @@ export default function UserDetailScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{dados.name}</Text>
-      <Text style={styles.label}>E-mail</Text>
-      <Text style={styles.value}>{dados.email}</Text>
-      <Text style={styles.label}>Cidade</Text>
-      <Text style={styles.value}>{dados.address.city}</Text>
+    <View style={[styles.container, { backgroundColor: cores.background }]}>
+      <Text style={[styles.title, { color: cores.text }]}>{dados.name}</Text>
+      <Text style={[styles.label, { color: cores.textSecondary }]}>E-mail</Text>
+      <Text style={[styles.value, { color: cores.text }]}>{dados.email}</Text>
+      <Text style={[styles.label, { color: cores.textSecondary }]}>Cidade</Text>
+      <Text style={[styles.value, { color: cores.text }]}>{dados.address.city}</Text>
     </View>
   );
 }

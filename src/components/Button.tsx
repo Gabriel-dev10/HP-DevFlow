@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Plus } from 'lucide-react-native';
 
 import { colors, spacing } from '../theme';
+import { useTheme } from '../data/theme-context';
 
 type ButtonProps = {
   title: string;
@@ -10,14 +11,15 @@ type ButtonProps = {
 };
 
 export function Button({ title, onPress, icon = 'none' }: ButtonProps) {
+  const { cores } = useTheme();
   return (
     <Pressable
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.button, { backgroundColor: cores.primary }, pressed && styles.pressed]}
       onPress={onPress}
     >
       <View style={styles.content}>
-        {icon === 'plus' && <Plus size={18} color={colors.surface} />}
-      <Text style={styles.text}>{title}</Text>
+        {icon === 'plus' && <Plus size={18} color={cores.surface} />}
+      <Text style={[styles.text, { color: cores.surface }]}>{title}</Text>
       </View>
     </Pressable>
   );

@@ -18,7 +18,7 @@ export default function LoginScreen() {
     <View style={[styles.container, { backgroundColor: cores.background }]}>
       <Text style={[styles.title, { color: cores.text }]}>StudyFlow</Text>
       <Text style={[styles.subtitle, { color: cores.textSecondary }]}>Entre para acompanhar suas atividades.</Text>
-      <Pressable style={styles.button} onPress={() => void handleLogin()}>
+      <Pressable style={[styles.button, { backgroundColor: cores.primaryDark }]} onPress={() => void handleLogin()}>
         <Text style={styles.buttonText}>Entrar</Text>
       </Pressable>
     </View>
