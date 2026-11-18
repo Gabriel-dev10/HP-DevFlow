@@ -9,7 +9,7 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     await entrar('aluno@studyflow.com', 'studyflow');
-    router.replace('/(app)/(tabs)' as Href);
+    router.replace('/' as Href);
   }
 
   return (
