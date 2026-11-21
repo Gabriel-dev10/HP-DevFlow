@@ -9,7 +9,7 @@
 
 O **StudyFlow (HP DevFlow)** é um aplicativo mobile multiplataforma (iOS, Android e Web) construído com **React Native** e **Expo (SDK 57)**. Inspirado no ecossistema de ferramentas como GitLab e Jira, o app resolve a necessidade de acompanhamento ágil de issues, ciclo de entrega de software (Backlog -> Dev -> Revisão -> Concluído) e alocação de desenvolvedores.
 
-O app combina dados de catálogo de membros vindos da API REST pública **JSONPlaceholder** com um motor local de persistência, cache com tolerância a falhas e tematização dinâmica, assegurando que o desenvolvedor continue produtivo mesmo em ambientes de baixa ou nenhuma conectividade.
+O app combina dados de catálogo de membros vindos da API REST pública gratuita **DummyJSON** com um motor local de persistência, cache com tolerância a falhas e tematização dinâmica, assegurando que o desenvolvedor continue produtivo mesmo em ambientes de baixa ou nenhuma conectividade.
 
 ---
 
@@ -98,7 +98,7 @@ flowchart TD
     end
 
     subgraph Remote ["Serviços Externos"]
-        O["JSONPlaceholder API\n/users e /users/:id"]
+        O["DummyJSON API\n/users e /users/:id"]
     end
 
     UI <--> State

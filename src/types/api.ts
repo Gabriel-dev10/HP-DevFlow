@@ -7,6 +7,20 @@ export type User = {
   };
 };
 
+export type DummyJsonUser = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  address: {
+    city: string;
+  };
+};
+
+export type DummyJsonUsersResponse = {
+  users: DummyJsonUser[];
+};
+
 export type AuthUser = {
   name: string;
   email: string;
