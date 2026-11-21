@@ -4,8 +4,6 @@ import { useRouter } from 'expo-router';
 import { CircleDot, Filter, Plus } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { OfflineBanner } from '../../components/OfflineBanner';
-import { useOnline } from '../../hooks/useOnline';
 import { useTasks } from '../../data/task-context';
 import { colors, spacing } from '../../theme';
 import { TaskStatus } from '../../types/task';
@@ -24,7 +22,6 @@ const statusLabels: Record<FilterType, string> = {
 export default function IssuesScreen() {
   const { cores } = useTheme();
   const insets = useSafeAreaInsets();
-  const online = useOnline();
   const [filter, setFilter] = useState<FilterType>('todas');
   const { tasks } = useTasks();
   const router = useRouter();
@@ -40,7 +37,6 @@ export default function IssuesScreen() {
         },
       ]}
     >
-      {!online && <OfflineBanner />}
       <View style={styles.header}>
         <View style={styles.headerCopy}>
           <Text style={[styles.eyebrow, { color: cores.primary }]}>DEMANDAS DE DESENVOLVIMENTO</Text>

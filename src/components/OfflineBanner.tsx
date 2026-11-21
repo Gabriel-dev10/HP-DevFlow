@@ -9,7 +9,10 @@ export function OfflineBanner() {
       accessibilityLiveRegion="polite"
       style={[styles.banner, { backgroundColor: cores.danger }]}
     >
-      <Text style={[styles.text, { color: cores.surface }]}>Você está offline</Text>
+      <Text style={[styles.text, { color: cores.surface }]}>Sem internet no momento</Text>
+      <Text style={[styles.subtitle, { color: cores.surface }]}>
+        Você ainda pode usar os dados já carregados.
+      </Text>
     </View>
   );
 }
@@ -27,6 +30,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: '700',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 12,
+    marginTop: 2,
     textAlign: 'center',
   },
 });

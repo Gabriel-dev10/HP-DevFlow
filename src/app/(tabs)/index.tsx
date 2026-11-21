@@ -3,7 +3,6 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from '
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { OfflineBanner } from '../../components/OfflineBanner';
 import { useFetch } from '../../hooks/useFetch';
 import { useOnline } from '../../hooks/useOnline';
 import { api } from '../../services/api';
@@ -46,7 +45,6 @@ export default function HomeScreen() {
           },
         ]}
       >
-        {!online && <OfflineBanner />}
         <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );
@@ -64,7 +62,6 @@ export default function HomeScreen() {
           },
         ]}
       >
-        {!online && <OfflineBanner />}
         <Text style={[styles.error, { color: cores.danger }]}>{erro}</Text>
         <Pressable
           style={[styles.retry, { backgroundColor: cores.primary }]}
@@ -86,7 +83,6 @@ export default function HomeScreen() {
         },
       ]}
     >
-      {!online && <OfflineBanner />}
       <Text style={[styles.title, { color: cores.text }]}>Usuários</Text>
       <FlatList
         data={dados ?? []}
